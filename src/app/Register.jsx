@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import AuthLayout from "../../components/public/AuthLayout";
+import AuthLayout from "../components/public/AuthLayout";
 
 export default function Register() {
   return (
