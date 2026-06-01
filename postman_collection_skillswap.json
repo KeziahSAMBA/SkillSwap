@@ -1,0 +1,486 @@
+{
+  "info": {
+    "name": "SkillSwap API",
+    "_postman_id": "skillswap-api-v1",
+    "description": "Collection complète de l'API REST SkillSwap",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api/v1" },
+    { "key": "token",   "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "  console.log('Token sauvegardé automatiquement');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Dupont\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "  console.log('Token sauvegardé automatiquement');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profil",
+      "item": [
+        {
+          "name": "GET Mon profil",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users/me"
+          }
+        },
+        {
+          "name": "PATCH Mon profil",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/users/me",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice D.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Mes compétences",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users/me/skills"
+          }
+        },
+        {
+          "name": "POST Ajouter compétence",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/users/me/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skillId\": \"REMPLACER_PAR_SKILL_ID\",\n  \"type\": \"TEACHING\",\n  \"level\": \"INTERMEDIATE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Supprimer compétence",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users/me/skills/REMPLACER_PAR_USER_SKILL_ID"
+          }
+        },
+        {
+          "name": "GET Mes disponibilités",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users/me/availabilities"
+          }
+        },
+        {
+          "name": "POST Ajouter disponibilité",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/users/me/availabilities",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dayOfWeek\": 1,\n  \"startTime\": \"09:00\",\n  \"endTime\": \"12:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Supprimer disponibilité",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users/me/availabilities/REMPLACER_PAR_AVAILABILITY_ID"
+          }
+        },
+        {
+          "name": "GET Mes points",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users/me/points"
+          }
+        },
+        {
+          "name": "GET Mes badges",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/users/me/badges"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Skills catalogue",
+      "item": [
+        {
+          "name": "GET Catalogue",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/skills",
+              "query": [
+                { "key": "search",   "value": "",   "disabled": true },
+                { "key": "category", "value": "",   "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Créer compétence",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.skill) {",
+                  "  pm.collectionVariables.set('skillId', json.skill.id);",
+                  "  console.log('skillId sauvegardé :', json.skill.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/skills",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"JavaScript\",\n  \"category\": \"Développement web\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Matching",
+      "item": [
+        {
+          "name": "GET Rechercher partenaires",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/matching/search?skillId={{skillId}}&lookingFor=TEACHING",
+              "query": [
+                { "key": "skillId",    "value": "{{skillId}}" },
+                { "key": "lookingFor", "value": "TEACHING" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Mes mises en relation",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/matches"
+          }
+        },
+        {
+          "name": "POST Envoyer demande",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/matches",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"helperId\": \"REMPLACER_PAR_USER_ID\",\n  \"skillId\": \"{{skillId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PATCH Accepter demande",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/matches/REMPLACER_PAR_MATCH_ID",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACCEPTED\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "GET Liste sessions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/sessions?status=PLANNED",
+              "query": [
+                { "key": "type",   "value": "",        "disabled": true },
+                { "key": "status", "value": "PLANNED" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Créer session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.session) {",
+                  "  pm.collectionVariables.set('sessionId', json.session.id);",
+                  "  console.log('sessionId sauvegardé :', json.session.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/sessions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atelier JavaScript débutant\",\n  \"type\": \"WORKSHOP\",\n  \"skillId\": \"{{skillId}}\",\n  \"scheduledAt\": \"2026-07-01T10:00:00.000Z\",\n  \"durationMin\": 90\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Détail session",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/sessions/{{sessionId}}"
+          }
+        },
+        {
+          "name": "PATCH Modifier session",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/sessions/{{sessionId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ONGOING\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST Rejoindre session",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/sessions/{{sessionId}}/participants"
+          }
+        },
+        {
+          "name": "DELETE Quitter session",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/sessions/{{sessionId}}/participants"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gamification",
+      "item": [
+        {
+          "name": "GET Mes défis",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/challenges"
+          }
+        },
+        {
+          "name": "POST Lancer un défi",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/challenges",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challengedId\": \"REMPLACER_PAR_USER_ID\",\n  \"description\": \"Crée une API REST en moins d'une heure !\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PATCH Répondre à un défi",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/challenges/REMPLACER_PAR_CHALLENGE_ID",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACCEPTED\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Feed social",
+      "item": [
+        {
+          "name": "GET Feed",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/feed"
+          }
+        },
+        {
+          "name": "POST Publier réalisation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/feed",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"J'ai terminé mon premier projet React aujourd'hui !\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Recommandations reçues",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/recommendations"
+          }
+        },
+        {
+          "name": "POST Recommander un pair",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/recommendations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recommendedId\": \"REMPLACER_PAR_USER_ID\",\n  \"content\": \"Excellent tuteur, très pédagogue sur JavaScript.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Feedbacks reçus",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/feedbacks"
+          }
+        },
+        {
+          "name": "POST Laisser un feedback",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{baseUrl}}/feedbacks",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiverId\": \"REMPLACER_PAR_USER_ID\",\n  \"sessionId\": null,\n  \"rating\": 5,\n  \"comment\": \"Super session, j'ai beaucoup appris !\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

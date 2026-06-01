@@ -1,0 +1,385 @@
+{
+  "_id": "skillswap-collection-v1",
+  "colName": "SkillSwap API",
+  "created": "2026-06-01T00:00:00.000Z",
+  "sortNum": 10000,
+  "client": "thunderclient",
+  "folders": [
+    { "_id": "f-auth",    "name": "Auth",            "sortNum": 1000 },
+    { "_id": "f-profile", "name": "Profil",          "sortNum": 2000 },
+    { "_id": "f-skills",  "name": "Skills catalogue", "sortNum": 3000 },
+    { "_id": "f-match",   "name": "Matching",        "sortNum": 4000 },
+    { "_id": "f-sessions","name": "Sessions",        "sortNum": 5000 },
+    { "_id": "f-gamif",   "name": "Gamification",    "sortNum": 6000 },
+    { "_id": "f-feed",    "name": "Feed social",     "sortNum": 7000 }
+  ],
+  "requests": [
+    {
+      "_id": "r-register",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-auth",
+      "name": "Register",
+      "sortNum": 1000,
+      "url": "{{baseUrl}}/auth/register",
+      "method": "POST",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Alice Dupont\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\"\n}"
+      }
+    },
+    {
+      "_id": "r-login",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-auth",
+      "name": "Login",
+      "sortNum": 2000,
+      "url": "{{baseUrl}}/auth/login",
+      "method": "POST",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\"\n}"
+      }
+    },
+    {
+      "_id": "r-get-me",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-profile",
+      "name": "GET Mon profil",
+      "sortNum": 1000,
+      "url": "{{baseUrl}}/users/me",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-patch-me",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-profile",
+      "name": "PATCH Mon profil",
+      "sortNum": 2000,
+      "url": "{{baseUrl}}/users/me",
+      "method": "PATCH",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Alice D.\"\n}"
+      }
+    },
+    {
+      "_id": "r-get-my-skills",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-profile",
+      "name": "GET Mes compétences",
+      "sortNum": 3000,
+      "url": "{{baseUrl}}/users/me/skills",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-post-my-skill",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-profile",
+      "name": "POST Ajouter compétence",
+      "sortNum": 4000,
+      "url": "{{baseUrl}}/users/me/skills",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"skillId\": \"SKILL_ID_ICI\",\n  \"type\": \"TEACHING\",\n  \"level\": \"INTERMEDIATE\"\n}"
+      }
+    },
+    {
+      "_id": "r-delete-my-skill",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-profile",
+      "name": "DELETE Supprimer compétence",
+      "sortNum": 5000,
+      "url": "{{baseUrl}}/users/me/skills/USER_SKILL_ID_ICI",
+      "method": "DELETE",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-get-availabilities",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-profile",
+      "name": "GET Mes disponibilités",
+      "sortNum": 6000,
+      "url": "{{baseUrl}}/users/me/availabilities",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-post-availability",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-profile",
+      "name": "POST Ajouter disponibilité",
+      "sortNum": 7000,
+      "url": "{{baseUrl}}/users/me/availabilities",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"dayOfWeek\": 1,\n  \"startTime\": \"09:00\",\n  \"endTime\": \"12:00\"\n}"
+      }
+    },
+    {
+      "_id": "r-get-skills-cat",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-skills",
+      "name": "GET Catalogue compétences",
+      "sortNum": 1000,
+      "url": "{{baseUrl}}/skills",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }],
+      "params": [
+        { "name": "search", "value": "" },
+        { "name": "category", "value": "" }
+      ]
+    },
+    {
+      "_id": "r-post-skill-cat",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-skills",
+      "name": "POST Créer compétence",
+      "sortNum": 2000,
+      "url": "{{baseUrl}}/skills",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"JavaScript\",\n  \"category\": \"Développement web\"\n}"
+      }
+    },
+    {
+      "_id": "r-search-match",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-match",
+      "name": "GET Rechercher partenaires",
+      "sortNum": 1000,
+      "url": "{{baseUrl}}/matching/search",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }],
+      "params": [
+        { "name": "skillId",    "value": "SKILL_ID_ICI" },
+        { "name": "lookingFor", "value": "TEACHING" }
+      ]
+    },
+    {
+      "_id": "r-get-matches",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-match",
+      "name": "GET Mes mises en relation",
+      "sortNum": 2000,
+      "url": "{{baseUrl}}/matches",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-post-match",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-match",
+      "name": "POST Envoyer demande",
+      "sortNum": 3000,
+      "url": "{{baseUrl}}/matches",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"helperId\": \"USER_ID_ICI\",\n  \"skillId\": \"SKILL_ID_ICI\"\n}"
+      }
+    },
+    {
+      "_id": "r-patch-match",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-match",
+      "name": "PATCH Accepter / Refuser demande",
+      "sortNum": 4000,
+      "url": "{{baseUrl}}/matches/MATCH_ID_ICI",
+      "method": "PATCH",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"status\": \"ACCEPTED\"\n}"
+      }
+    },
+    {
+      "_id": "r-get-sessions",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-sessions",
+      "name": "GET Liste sessions",
+      "sortNum": 1000,
+      "url": "{{baseUrl}}/sessions",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }],
+      "params": [
+        { "name": "type",   "value": "" },
+        { "name": "status", "value": "PLANNED" }
+      ]
+    },
+    {
+      "_id": "r-post-session",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-sessions",
+      "name": "POST Créer session",
+      "sortNum": 2000,
+      "url": "{{baseUrl}}/sessions",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"Atelier JavaScript débutant\",\n  \"type\": \"WORKSHOP\",\n  \"skillId\": \"SKILL_ID_ICI\",\n  \"scheduledAt\": \"2026-07-01T10:00:00.000Z\",\n  \"durationMin\": 90\n}"
+      }
+    },
+    {
+      "_id": "r-join-session",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-sessions",
+      "name": "POST Rejoindre session",
+      "sortNum": 3000,
+      "url": "{{baseUrl}}/sessions/SESSION_ID_ICI/participants",
+      "method": "POST",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-leave-session",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-sessions",
+      "name": "DELETE Quitter session",
+      "sortNum": 4000,
+      "url": "{{baseUrl}}/sessions/SESSION_ID_ICI/participants",
+      "method": "DELETE",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-get-points",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-gamif",
+      "name": "GET Mes points",
+      "sortNum": 1000,
+      "url": "{{baseUrl}}/users/me/points",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-get-badges",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-gamif",
+      "name": "GET Mes badges",
+      "sortNum": 2000,
+      "url": "{{baseUrl}}/users/me/badges",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-get-challenges",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-gamif",
+      "name": "GET Mes défis",
+      "sortNum": 3000,
+      "url": "{{baseUrl}}/challenges",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-post-challenge",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-gamif",
+      "name": "POST Lancer un défi",
+      "sortNum": 4000,
+      "url": "{{baseUrl}}/challenges",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"challengedId\": \"USER_ID_ICI\",\n  \"description\": \"Crée une API REST en moins d'une heure !\"\n}"
+      }
+    },
+    {
+      "_id": "r-get-feed",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-feed",
+      "name": "GET Feed",
+      "sortNum": 1000,
+      "url": "{{baseUrl}}/feed",
+      "method": "GET",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{token}}" }]
+    },
+    {
+      "_id": "r-post-feed",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-feed",
+      "name": "POST Publier réalisation",
+      "sortNum": 2000,
+      "url": "{{baseUrl}}/feed",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"content\": \"J'ai terminé mon premier projet React aujourd'hui !\"\n}"
+      }
+    },
+    {
+      "_id": "r-post-reco",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-feed",
+      "name": "POST Recommander un pair",
+      "sortNum": 3000,
+      "url": "{{baseUrl}}/recommendations",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"recommendedId\": \"USER_ID_ICI\",\n  \"content\": \"Excellent tuteur, très pédagogue sur JavaScript.\"\n}"
+      }
+    },
+    {
+      "_id": "r-post-feedback",
+      "colId": "skillswap-collection-v1",
+      "containerId": "f-feed",
+      "name": "POST Laisser un feedback",
+      "sortNum": 4000,
+      "url": "{{baseUrl}}/feedbacks",
+      "method": "POST",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{token}}" },
+        { "name": "Content-Type",  "value": "application/json" }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"receiverId\": \"USER_ID_ICI\",\n  \"sessionId\": null,\n  \"rating\": 5,\n  \"comment\": \"Super session, j'ai beaucoup appris !\"\n}"
+      }
+    }
+  ]
+}
