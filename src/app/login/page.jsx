@@ -4,7 +4,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-[#F5F5F5] flex items-center justify-center px-5">
       <div className="bg-white rounded-3xl p-8 w-full max-w-md">
-        <img src="/logo-6you.png" className="h-12 mb-8" alt="SkillSwap" />
+        <img src="/logo-6you.jpeg" className="h-12 mb-8" alt="SkillSwap" />
 
         <h1 className="text-3xl font-bold">Connexion</h1>
         <p className="text-gray-600 mt-2">Accède à ton espace étudiant.</p>
