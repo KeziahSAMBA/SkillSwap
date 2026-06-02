@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import AuthLayout from "../components/public/AuthLayout";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AuthLayout from "@/components/public/AuthLayout";
 
-export default function Login() {
-  const navigate = useNavigate();
+export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -30,7 +31,7 @@ export default function Login() {
     }
 
     localStorage.setItem("token", data.token);
-    navigate("/profil");
+    router.push("/profil");
   }
 
   return (
@@ -46,30 +47,30 @@ export default function Login() {
         )}
 
         <div>
-          <label className="block text-sm font-medium mb-1">Adresse email</label>
+          <label className="block text-sm font-medium text-gray-900 mb-1">Adresse email</label>
           <input
             type="email"
             placeholder="exemple@ecole.fr"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded-lg px-4 py-2 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Mot de passe</label>
+          <label className="block text-sm font-medium text-gray-900 mb-1">Mot de passe</label>
           <input
             type="password"
             placeholder="Votre mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded-lg px-4 py-2 text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-sm text-gray-900">
           <label className="flex items-center gap-2">
             <input type="checkbox" />
             Se souvenir de moi
@@ -88,9 +89,9 @@ export default function Login() {
         </button>
       </form>
 
-      <p className="text-center text-sm mt-6">
+      <p className="text-center text-sm text-gray-900 mt-6">
         Pas encore de compte ?{" "}
-        <Link to="/inscription" className="text-blue-600 font-medium">
+        <Link href="/inscription" className="text-blue-600 font-medium">
           Créer un compte
         </Link>
       </p>

@@ -48,7 +48,7 @@ export default function Home() {
         </h2>
 
         <p className="max-w-2xl mt-8 text-gray-600 text-lg">
-          Une plateforme collaborative permettant aux étudiants d'apprendre les
+          Une plateforme collaborative permettant aux étudiants d apprendre les
           uns des autres, de partager leurs connaissances et de développer leurs
           compétences dans un environnement de confiance.
         </p>
