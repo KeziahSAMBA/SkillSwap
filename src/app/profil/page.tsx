@@ -1,9 +1,19 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+type AuthUser = {
+  id?: string;
+  name?: string;
+  email?: string;
+  bio?: string;
+  skills?: { id: string; name?: string; skill?: { name: string }; type: string; level: string }[];
+  availabilities?: { id: string; day: string; startTime: string; endTime: string }[];
+};
 
 const profiles = [
   {
@@ -139,12 +149,64 @@ function renderStars(rating: number) {
 
 export default function ProfilPage() {
   const searchParams = useSearchParams();
-  const selectedUser = searchParams.get("user") || "tom";
+  const router = useRouter();
+  const userSlug = searchParams.get("user");
 
-  const profile =
-    profiles.find((item) => item.slug === selectedUser) || profiles[0];
+  const [authUser, setAuthUser] = useState<AuthUser | null>(() => {
+    if (typeof window === "undefined") return null;
+    try { return JSON.parse(localStorage.getItem("user") ?? "null"); } catch { return null; }
+  });
+  const [loading, setLoading] = useState(!userSlug);
+  const [error, setError] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [form, setForm] = useState<{ name: string; bio: string }>(() => {
+    if (typeof window === "undefined") return { name: "", bio: "" };
+    try {
+      const u = JSON.parse(localStorage.getItem("user") ?? "null");
+      return { name: u?.name ?? "", bio: u?.bio ?? "" };
+    } catch { return { name: "", bio: "" }; }
+  });
+  const [saving, setSaving] = useState(false);
 
-  return (
+  useEffect(() => {
+    if (userSlug) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) { router.push("/login"); return; }
+
+    fetch("/api/v1/users/me", { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => { if (r.status === 401) { localStorage.removeItem("token"); router.push("/login"); return null; } return r.json(); })
+      .then((data) => { if (!data) return; setAuthUser(data); setForm({ name: data.name ?? "", bio: data.bio ?? "" }); })
+      .catch(() => setError("Impossible de charger le profil."))
+      .finally(() => setLoading(false));
+  }, [router, userSlug]);
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    const token = localStorage.getItem("token");
+    const res = await fetch("/api/v1/users/me", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(form),
+    });
+    const data = await res.json();
+    setSaving(false);
+    if (res.ok) {
+      setAuthUser((prev) => ({ ...prev, ...data }));
+      localStorage.setItem("user", JSON.stringify({ ...authUser, ...data }));
+      setEditMode(false);
+    } else {
+      setError(data.message ?? "Erreur lors de la sauvegarde.");
+    }
+  }
+
+  if (loading) return <main className="min-h-screen bg-[#F5F5F5] flex items-center justify-center"><p className="text-gray-600">Chargement…</p></main>;
+
+  // Vue profil d'un autre étudiant (?user=slug) — rendu statique original
+  if (userSlug) {
+    const profile = profiles.find((item) => item.slug === userSlug) || profiles[0];
+    return (
     <main className="min-h-screen bg-white text-black">
       <Header />
 
@@ -339,6 +401,123 @@ export default function ProfilPage() {
                   </p>
                 </div>
               ))}
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+    );
+  }
+
+  // Vue profil connecté (données API)
+  const initials = authUser?.name?.charAt(0)?.toUpperCase() ?? "?";
+
+  return (
+    <main className="min-h-screen bg-white text-black">
+      <Header />
+
+      <section className="max-w-7xl mx-auto px-5 py-10">
+        <Link href="/" className="text-sm hover:text-[#DFB626]">← Accueil</Link>
+
+        {error && (
+          <p className="mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2">{error}</p>
+        )}
+
+        <div className="grid lg:grid-cols-[320px_1fr] gap-10 mt-8">
+          <aside className="border border-gray-200 rounded-3xl p-6 h-fit">
+            <div className="w-32 h-32 bg-[#DFB626] rounded-full flex items-center justify-center text-5xl font-bold mx-auto">
+              {initials}
+            </div>
+            <h1 className="text-2xl font-bold text-center mt-5">{authUser?.name}</h1>
+            <p className="text-center text-gray-500 text-sm">{authUser?.email}</p>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="bg-[#F5F5F5] rounded-2xl p-4 text-center">
+                <p className="text-xl font-bold">{authUser?.skills?.length ?? 0}</p>
+                <p className="text-sm">Compétences</p>
+              </div>
+              <div className="bg-[#F5F5F5] rounded-2xl p-4 text-center">
+                <p className="text-xl font-bold">{authUser?.availabilities?.length ?? 0}</p>
+                <p className="text-sm">Dispos</p>
+              </div>
+            </div>
+
+            <button onClick={() => setEditMode(true)} className="w-full bg-black text-white py-4 rounded-xl mt-6 hover:bg-[#DFB626] hover:text-black transition">
+              Modifier le profil
+            </button>
+            <button onClick={() => { localStorage.removeItem("token"); localStorage.removeItem("user"); router.push("/login"); }} className="w-full border border-black py-4 rounded-xl mt-3 hover:bg-black hover:text-white transition">
+              Déconnexion
+            </button>
+          </aside>
+
+          <section className="space-y-8">
+            <div className="border border-gray-200 rounded-3xl p-8">
+              <p className="text-[#DFB626] font-bold mb-2">Mon profil</p>
+
+              {editMode ? (
+                <form onSubmit={handleSave} className="space-y-4 mt-2">
+                  <input type="text" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required placeholder="Nom complet" className="w-full border rounded-xl px-4 py-3" />
+                  <textarea value={form.bio} onChange={(e) => setForm((f) => ({ ...f, bio: e.target.value }))} placeholder="Courte description (bio)" rows={3} className="w-full border rounded-xl px-4 py-3 resize-none" />
+                  <div className="flex gap-3">
+                    <button type="submit" disabled={saving} className="bg-black text-white px-6 py-3 rounded-xl hover:bg-[#DFB626] hover:text-black transition disabled:opacity-60">
+                      {saving ? "Sauvegarde…" : "Enregistrer"}
+                    </button>
+                    <button type="button" onClick={() => setEditMode(false)} className="border border-black px-6 py-3 rounded-xl hover:bg-black hover:text-white transition">
+                      Annuler
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <h2 className="text-4xl font-serif font-bold">{authUser?.name}</h2>
+                  <p className="text-gray-600 mt-2">{authUser?.email}</p>
+                  {authUser?.bio && <p className="text-gray-700 mt-4 leading-relaxed">{authUser.bio}</p>}
+                </>
+              )}
+            </div>
+
+            <div className="border border-gray-200 rounded-3xl p-8">
+              <h3 className="font-bold text-xl mb-4">Mes compétences</h3>
+              {(authUser?.skills?.length ?? 0) > 0 ? (
+                <div className="space-y-3">
+                  {authUser!.skills!.map((s) => (
+                    <div key={s.id} className="flex justify-between items-center bg-[#F5F5F5] rounded-2xl px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <span>{s.skill?.name ?? s.name}</span>
+                        <span className={`text-xs px-3 py-1 rounded-full ${s.type === "teach" ? "bg-[#DFB626] text-black" : "bg-black text-white"}`}>
+                          {s.type === "teach" ? "J&apos;enseigne" : "J&apos;apprends"}
+                        </span>
+                      </div>
+                      <span className="text-sm text-gray-600">{s.level}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-600 text-center py-6">Aucune compétence ajoutée pour l&apos;instant.</p>
+              )}
+              <button className="mt-5 w-full border-2 border-dashed border-gray-200 text-gray-600 py-4 rounded-xl hover:border-[#DFB626] hover:text-black transition">
+                + Ajouter une compétence
+              </button>
+            </div>
+
+            <div className="border border-gray-200 rounded-3xl p-8">
+              <h3 className="font-bold text-xl mb-4">Mes disponibilités</h3>
+              {(authUser?.availabilities?.length ?? 0) > 0 ? (
+                <div className="flex flex-wrap gap-3">
+                  {authUser!.availabilities!.map((a) => (
+                    <span key={a.id} className="bg-[#DFB626] text-black px-4 py-2 rounded-full text-sm">
+                      {a.day} {a.startTime}–{a.endTime}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-600 text-center py-6">Aucune disponibilité renseignée.</p>
+              )}
+              <button className="mt-5 w-full border-2 border-dashed border-gray-200 text-gray-600 py-4 rounded-xl hover:border-[#DFB626] hover:text-black transition">
+                + Ajouter une disponibilité
+              </button>
             </div>
           </section>
         </div>
