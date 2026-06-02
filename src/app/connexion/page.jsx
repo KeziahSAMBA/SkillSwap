@@ -31,6 +31,7 @@ export default function LoginPage() {
     }
 
     localStorage.setItem("token", data.token);
+    if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
     router.push("/profil");
   }
 

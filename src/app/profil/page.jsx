@@ -22,6 +22,15 @@ export default function ProfilPage() {
       return;
     }
 
+    const cached = localStorage.getItem("user");
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        setUser((prev) => prev ?? parsed);
+        setForm((f) => ({ name: parsed.name ?? f.name, bio: parsed.bio ?? f.bio }));
+      } catch {}
+    }
+
     fetch("/api/v1/users/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
