@@ -58,7 +58,7 @@ export default function MatchsPage() {
           </div>
 
           <Link
-            href="/profil"
+            href="/"
             className="bg-black text-white px-6 py-3 rounded-xl text-center"
           >
             Mon profil
@@ -160,7 +160,7 @@ export default function MatchsPage() {
 
                   <div className="flex gap-3">
                     <Link
-                      href="/profil"
+                      href="/"
                       className="bg-black text-white px-5 py-2 rounded-xl"
                     >
                       Profil

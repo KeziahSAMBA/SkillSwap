@@ -1,66 +1,183 @@
-import Link from "next/link";
+"use client";
+
+import { useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const sessions = [
-  { type: "Atelier", title: "Atelier React débutant", date: "Lundi 14h", lieu: "Salle B203", status: "Confirmé" },
-  { type: "Cours rapide", title: "Canva pour présentation", date: "Jeudi 12h", lieu: "Visio", status: "Attente" },
-  { type: "Club", title: "Club Agile & Scrum", date: "Vendredi 10h", lieu: "Salle projet", status: "Ouvert" },
+  {
+    id: 1,
+    title: "Cours React.js en groupe",
+    teacher: "Tom Couture",
+    type: "Vidéo",
+    format: "Cours collectif",
+    date: "Lundi 14h",
+    duration: "1h",
+    participants: 8,
+    maxParticipants: 12,
+    status: "En direct",
+  },
+  {
+    id: 2,
+    title: "Atelier SEO & Canva",
+    teacher: "Sarah Benali",
+    type: "Vocal",
+    format: "Atelier",
+    date: "Jeudi 12h",
+    duration: "45min",
+    participants: 5,
+    maxParticipants: 10,
+    status: "Ouvert",
+  },
+  {
+    id: 3,
+    title: "Club Agile & Scrum",
+    teacher: "Estelle Morel",
+    type: "Vidéo",
+    format: "Club",
+    date: "Vendredi 10h",
+    duration: "1h30",
+    participants: 12,
+    maxParticipants: 15,
+    status: "Planifié",
+  },
 ];
 
-export default function SessionsPage() {
-  return (
-    <main className="min-h-screen bg-white text-black">
-      <Header />
+const filters = ["Tous", "Vidéo", "Vocal", "Atelier", "Club"];
 
-      <section className="max-w-7xl mx-auto px-5 py-12">
-        <div className="flex flex-col md:flex-row justify-between gap-5 mb-10">
-          <div>
-            <p className="text-[#DFB626] font-bold">Gestion des sessions</p>
-            <h1 className="text-5xl font-serif font-bold mt-2">Planifie tes échanges</h1>
-            <p className="text-gray-600 mt-3">
-              Ateliers, cours rapides et clubs thématiques entre étudiants.
-            </p>
+function getStatusClass(status: string) {
+  if (status === "En direct") {
+    return "bg-red-100 text-red-700 border-red-300";
+  }
+
+  if (status === "Ouvert") {
+    return "bg-green-100 text-green-700 border-green-300";
+  }
+
+  return "bg-[#1800AD]/10 text-[#1800AD] border-[#1800AD]/20";
+}
+
+export default function SessionsPage() {
+  const [activeFilter, setActiveFilter] = useState("Tous");
+
+  const filteredSessions = useMemo(() => {
+    if (activeFilter === "Tous") return sessions;
+
+    return sessions.filter(
+      (session) =>
+        session.type === activeFilter || session.format === activeFilter
+    );
+  }, [activeFilter]);
+
+  return (
+    <main className="relative min-h-screen bg-[#F6F7FB] text-[#4A4A4A] overflow-hidden">
+      <AnimatedBackground />
+
+      <div className="relative z-10">
+        <Header />
+
+        <section className="max-w-7xl mx-auto px-5 py-12">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+            <div>
+              <p className="text-[#1800AD] font-bold">
+                Sessions & cours live
+              </p>
+
+              <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
+                Rejoins un cours collectif
+              </h1>
+
+              <p className="text-[#4A4A4A] mt-3 max-w-2xl">
+                Participe à des cours en groupe avec un formateur et plusieurs
+                étudiants, en format vidéo ou vocal.
+              </p>
+            </div>
+
+            <button className="bg-[#1800AD] text-white px-5 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition">
+              + Créer un cours
+            </button>
           </div>
 
-          <button className="bg-black text-white px-6 py-4 rounded-xl h-fit">
-            + Créer une session
-          </button>
-        </div>
+          <div className="flex flex-wrap gap-3 mb-8">
+            {filters.map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                className={`px-5 py-2 rounded-full border font-medium transition ${
+                  activeFilter === filter
+                    ? "bg-[#1800AD] border-[#1800AD] text-white"
+                    : "bg-white border-gray-200 text-[#4A4A4A] hover:border-[#1800AD] hover:text-[#1800AD]"
+                }`}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {["Ateliers", "Cours rapides", "Clubs thématiques"].map((item) => (
-            <button key={item} className="border border-gray-200 rounded-3xl p-6 text-left hover:border-[#DFB626]">
-              <h3 className="font-bold text-xl">{item}</h3>
-              <p className="text-gray-600 mt-2">Organiser ou rejoindre</p>
-            </button>
-          ))}
-        </div>
+          <div className="grid lg:grid-cols-3 gap-6">
+            {filteredSessions.map((session) => (
+              <article
+                key={session.id}
+                className="bg-white border border-gray-100 rounded-3xl p-6 hover:shadow-xl transition"
+              >
+                <div className="flex justify-between items-start gap-4">
+                  <div>
+                    <span className="bg-[#1800AD]/10 text-[#1800AD] px-4 py-1 rounded-full text-sm font-semibold">
+                      {session.type === "Vidéo" ? "🎥 Vidéo" : "🎙️ Vocal"}
+                    </span>
 
-        <div className="space-y-5">
-          {sessions.map((session) => (
-            <Link
-              href="/profil"
-              key={session.title}
-              className="block border border-gray-200 rounded-3xl p-6 hover:shadow-md transition"
-            >
-              <div className="flex flex-col md:flex-row justify-between gap-5">
-                <div>
-                  <span className="bg-[#DFB626] px-4 py-1 rounded-full text-sm">{session.type}</span>
-                  <h3 className="text-2xl font-bold mt-4">{session.title}</h3>
-                  <p className="text-gray-600">{session.date} · {session.lieu}</p>
+                    <h2 className="text-xl font-bold mt-5 text-[#1800AD]">
+                      {session.title}
+                    </h2>
+
+                    <p className="text-[#4A4A4A] mt-1">
+                      Animé par {session.teacher}
+                    </p>
+                  </div>
+
+                  <span
+                    className={`border px-3 py-1 rounded-full text-sm font-medium ${getStatusClass(
+                      session.status
+                    )}`}
+                  >
+                    {session.status}
+                  </span>
                 </div>
 
-                <span className="bg-[#F5F5F5] px-5 py-3 rounded-full h-fit">
-                  {session.status}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+                <div className="mt-6 space-y-3 text-sm text-[#4A4A4A]">
+                  <p>📅 {session.date}</p>
+                  <p>⏱️ {session.duration}</p>
+                  <p>
+                    👥 {session.participants}/{session.maxParticipants}{" "}
+                    participants
+                  </p>
+                  <p>📚 {session.format}</p>
+                </div>
 
-      <Footer />
+                <div className="mt-6 bg-[#F6F7FB] rounded-full h-3">
+                  <div
+                    className="bg-[#1800AD] h-3 rounded-full"
+                    style={{
+                      width: `${
+                        (session.participants / session.maxParticipants) * 100
+                      }%`,
+                    }}
+                  />
+                </div>
+
+                <button className="w-full mt-6 bg-[#1800AD] text-white py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition">
+                  {session.status === "En direct"
+                    ? "Rejoindre l’appel"
+                    : "Réserver une place"}
+                </button>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <Footer />
+      </div>
     </main>
   );
 }

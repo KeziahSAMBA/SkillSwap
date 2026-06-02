@@ -40,82 +40,124 @@ export default function Header() {
   ];
 
   return (
-    <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#E8E9F5]">
       <div className="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <img src="/logo-6you.jpeg" alt="SkillSwap" className="h-10 w-auto" />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium">
+        <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-[#4A4A4A]">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-[#DFB626]">
+            <Link
+              key={link.href}
+              href={link.href}
+              className="hover:text-[#1800AD] transition"
+            >
               {link.label}
             </Link>
           ))}
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          <Link href="/feed" className="relative text-xl">
+          <Link
+            href="/feed"
+            className="relative text-xl text-[#1800AD] hover:text-[#4D3AFF] transition"
+          >
             🔔
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#DFB626] rounded-full" />
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#4D3AFF] rounded-full" />
           </Link>
 
           {user ? (
             <>
               <Link
                 href="/profil"
-                className="w-11 h-11 rounded-full bg-[#DFB626] flex items-center justify-center font-bold"
+                className="w-11 h-11 rounded-full bg-[#1800AD] text-white flex items-center justify-center font-bold shadow-md"
               >
                 {initials}
               </Link>
 
               <button
                 onClick={logout}
-                className="text-sm border border-black px-4 py-2 rounded-xl hover:bg-black hover:text-white transition"
+                className="text-sm border border-[#1800AD] text-[#1800AD] px-4 py-2 rounded-xl font-semibold hover:bg-[#1800AD] hover:text-white transition"
               >
                 Déconnexion
               </button>
             </>
           ) : (
             <>
-              <Link href="/login" className="border border-black px-4 py-2 rounded-xl">
+              <Link
+                href="/login"
+                className="border border-[#1800AD] text-[#1800AD] px-4 py-2 rounded-xl font-semibold hover:bg-[#1800AD] hover:text-white transition"
+              >
                 Connexion
               </Link>
 
-              <Link href="/register" className="bg-[#DFB626] px-4 py-2 rounded-xl font-semibold">
+              <Link
+                href="/register"
+                className="bg-[#1800AD] text-white px-4 py-2 rounded-xl font-semibold hover:bg-[#4D3AFF] transition shadow-md"
+              >
                 Inscription
               </Link>
             </>
           )}
         </div>
 
-        <button onClick={() => setOpen(!open)} className="lg:hidden text-3xl">
+        <button
+          onClick={() => setOpen(!open)}
+          className="lg:hidden text-3xl text-[#1800AD]"
+        >
           ☰
         </button>
       </div>
 
       {open && (
-        <div className="lg:hidden px-5 pb-5 flex flex-col gap-4 bg-white">
+        <div className="lg:hidden px-5 pb-5 flex flex-col gap-4 bg-white border-t border-[#E8E9F5]">
           {links.map((link) => (
-            <Link key={link.href} href={link.href}>
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="text-[#4A4A4A] font-medium hover:text-[#1800AD] transition"
+            >
               {link.label}
             </Link>
           ))}
 
           {user ? (
             <>
-              <Link href="/profil" className="bg-[#DFB626] px-4 py-2 rounded-xl text-center font-bold">
+              <Link
+                href="/profil"
+                onClick={() => setOpen(false)}
+                className="bg-[#1800AD] text-white px-4 py-2 rounded-xl text-center font-bold"
+              >
                 {initials}
               </Link>
 
-              <button onClick={logout} className="border border-black px-4 py-2 rounded-xl">
+              <button
+                onClick={() => {
+                  logout();
+                  setOpen(false);
+                }}
+                className="border border-[#1800AD] text-[#1800AD] px-4 py-2 rounded-xl font-semibold hover:bg-[#1800AD] hover:text-white transition"
+              >
                 Déconnexion
               </button>
             </>
           ) : (
             <>
-              <Link href="/login">Connexion</Link>
-              <Link href="/register" className="bg-[#DFB626] px-4 py-2 rounded-xl text-center">
+              <Link
+                href="/login"
+                onClick={() => setOpen(false)}
+                className="border border-[#1800AD] text-[#1800AD] px-4 py-2 rounded-xl text-center font-semibold"
+              >
+                Connexion
+              </Link>
+
+              <Link
+                href="/register"
+                onClick={() => setOpen(false)}
+                className="bg-[#1800AD] text-white px-4 py-2 rounded-xl text-center font-semibold hover:bg-[#4D3AFF] transition"
+              >
                 Inscription
               </Link>
             </>

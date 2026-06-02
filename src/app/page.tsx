@@ -1,413 +1,324 @@
-"use client";
-
-import { useMemo, useState } from "react";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const matches = [
+const steps = [
   {
-    initials: "TC",
-    name: "Tom",
-    role: "Dev Web",
-    score: 96,
-    rating: 5,
-    tags: ["React.js", "Node"],
-    sessions: "23 sessions",
-    category: "Développement",
-    best: true,
+    icon: "👤",
+    number: "01",
+    title: "Créez votre profil",
+    text: "Renseignez vos compétences, votre niveau et ce que vous souhaitez apprendre.",
   },
   {
-    initials: "SA",
-    name: "Sarah",
-    role: "E-biz",
-    score: 89,
-    rating: 4,
-    tags: ["SEO", "Canva"],
-    sessions: "11 sessions",
-    category: "Marketing",
-    best: false,
+    icon: "👥",
+    number: "02",
+    title: "Trouvez un match",
+    text: "Découvrez les étudiants compatibles avec vos objectifs d’apprentissage.",
   },
   {
-    initials: "ES",
-    name: "Estelle",
-    role: "Chef de projet",
-    score: 83,
-    rating: 4,
-    tags: ["Agile", "Sprints"],
-    sessions: "8 sessions",
-    category: "Business",
-    best: false,
+    icon: "📅",
+    number: "03",
+    title: "Planifiez une session",
+    text: "Organisez une session en visio ou en présentiel selon vos disponibilités.",
+  },
+  {
+    icon: "📈",
+    number: "04",
+    title: "Progressez",
+    text: "Échangez, gagnez des badges et valorisez vos contributions.",
   },
 ];
 
-const sessions = [
+const advantages = [
   {
-    day: "LUN",
-    hour: "14h",
-    title: "Intro React avec Tom",
-    place: "Salle B203 · 1h",
-    type: "📍",
-    status: "Confirmé",
+    icon: "💲",
+    title: "100% Gratuit",
+    text: "Un apprentissage collaboratif accessible à tous les étudiants.",
   },
   {
-    day: "JEU",
-    hour: "12h",
-    title: "Canva avec Sarah",
-    place: "Visio · 45min",
-    type: "▶",
-    status: "Attente",
+    icon: "🛡️",
+    title: "Communauté fiable",
+    text: "Profils, avis et badges pour favoriser des échanges de qualité.",
   },
   {
-    day: "VEN",
-    hour: "10h",
-    title: "Sprints avec Estelle",
-    place: "Visio · 30min",
-    type: "▶",
-    status: "Ouvert",
+    icon: "🕒",
+    title: "Flexible",
+    text: "Des sessions adaptées à vos disponibilités et à votre rythme.",
+  },
+  {
+    icon: "✨",
+    title: "Progression",
+    text: "XP, badges et niveaux pour suivre votre évolution.",
   },
 ];
 
-const news = [
-  {
-    icon: "🖼️",
-    title: "Tom a partagé son portfolio",
-    meta: "Il y a 2h · 24 likes",
-  },
-  {
-    icon: "🏆",
-    title: "Kim a obtenu un badge",
-    meta: "Il y a 5h · Top Formateur",
-  },
+const skills = [
+  { icon: "⚛️", name: "React.js", tag: "Dev" },
+  { icon: "🎨", name: "Figma", tag: "Design" },
+  { icon: "🌍", name: "Anglais", tag: "Langues" },
+  { icon: "📈", name: "SEO", tag: "Marketing" },
+  { icon: "🐍", name: "Python", tag: "Dev" },
+  { icon: "🖼️", name: "Photoshop", tag: "Design" },
+  { icon: "📊", name: "Excel", tag: "Business" },
+  { icon: "ES", name: "Espagnol", tag: "Langues" },
 ];
-
-const categories = [
-  "Tous",
-  "Développement",
-  "Design",
-  "Langues",
-  "Marketing",
-  "Business",
-];
-
-function renderStars(rating: number) {
-  return "★".repeat(rating) + "☆".repeat(5 - rating);
-}
-
-function getStatusClass(status: string) {
-  if (status === "Confirmé") {
-    return "bg-green-100 text-green-700 border border-green-300";
-  }
-
-  if (status === "Attente") {
-    return "bg-[#DFB626] text-black border border-[#DFB626]";
-  }
-
-  if (status === "Ouvert") {
-    return "bg-black text-white border border-black";
-  }
-
-  return "bg-gray-100 text-gray-700 border border-gray-300";
-}
 
 export default function Home() {
-  const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("Tous");
-
-  const filteredMatches = useMemo(() => {
-    return matches.filter((match) => {
-      const query = search.toLowerCase();
-
-      const matchSearch =
-        match.name.toLowerCase().includes(query) ||
-        match.role.toLowerCase().includes(query) ||
-        match.tags.some((tag) => tag.toLowerCase().includes(query));
-
-      const matchCategory =
-        activeCategory === "Tous" || match.category === activeCategory;
-
-      return matchSearch && matchCategory;
-    });
-  }, [search, activeCategory]);
-
   return (
-    <main className="min-h-screen bg-[#F5F5F5] text-black">
+    <main className="min-h-screen bg-[#F6F7FB] text-[#4A4A4A]">
       <Header />
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-5 pt-8">
-        <div className="bg-white rounded-3xl p-4 shadow-sm">
-          <div className="bg-[#F5F5F5] rounded-2xl px-4 sm:px-5 py-4 flex items-center gap-3">
-            <span>🔍</span>
+      {/* HERO */}
+      <section className="min-h-[78vh] flex items-center">
+        <div className="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center">
+          <div className="mt-10">
+            <span className="inline-block bg-[#1800AD]/10 text-[#1800AD] font-bold px-4 py-2 text-sm rounded-full mb-6">
+              Plateforme étudiante collaborative
+            </span>
 
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Que souhaitez-vous apprendre aujourd’hui ?"
-              className="bg-transparent outline-none flex-1 text-sm sm:text-base"
-            />
+            <h1 className="text-4xl md:text-5xl font-black leading-tight text-[#1800AD]">
+              Apprendre.
+              <br />
+              <span className="text-[#4D3AFF]">Partager.</span>
+              <br />
+              Évoluer.
+            </h1>
 
-            <Link
-              href="/matchs"
-              className="hidden md:block bg-black text-white px-5 py-2 rounded-xl hover:bg-[#DFB626] hover:text-black transition"
-            >
-              Rechercher
-            </Link>
+            <p className="mt-6 text-lg leading-relaxed max-w-xl">
+              SkillSwap connecte les étudiants grâce à leurs compétences.
+              Apprenez, partagez et progressez ensemble dans une communauté de
+              confiance.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 mt-8">
+              <Link
+                href="/"
+                className="bg-[#1800AD] text-white font-bold px-6 py-3 rounded-xl text-center shadow-md hover:bg-[#4D3AFF] transition"
+              >
+                Commencer 
+              </Link>
+
+            </div>
+
+            <div className="flex items-center mt-8">
+              <div className="flex -space-x-3">
+                {["TC", "SA", "ES", "KM"].map((avatar) => (
+                  <div
+                    key={avatar}
+                    className="w-10 h-10 rounded-full bg-[#4D3AFF] text-white border-4 border-white flex items-center justify-center text-sm font-bold"
+                  >
+                    {avatar}
+                  </div>
+                ))}
+              </div>
+
+              <p className="ml-5 text-base">
+                <span className="text-[#1800AD] font-bold">+2500</span>{" "}
+                étudiants actifs
+              </p>
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-3 mt-4">
-            {categories.map((item) => (
-              <button
-                key={item}
-                onClick={() => setActiveCategory(item)}
-                className={`border px-4 py-2 rounded-full text-sm transition ${
-                  activeCategory === item
-                    ? "bg-[#DFB626] border-[#DFB626]"
-                    : "bg-white hover:bg-[#DFB626]"
-                }`}
+          <div className="relative">
+            <div className="absolute -right-3 -top-4 bg-white rounded-2xl shadow-lg px-5 py-3 flex items-center gap-3">
+              <span className="w-9 h-9 rounded-full bg-green-500 text-white flex items-center justify-center">
+                ✓
+              </span>
+              <p className="font-bold">Match trouvé !</p>
+            </div>
+
+            <div className="bg-white rounded-3xl shadow-lg p-6">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 rounded-2xl bg-[#1800AD] text-white flex items-center justify-center text-2xl">
+                  👥
+                </div>
+
+                <div>
+                  <h2 className="text-2xl font-bold text-[#1800AD]">
+                    Collaboration
+                  </h2>
+                  <p className="text-base">Échange de compétences</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  ["12K+", "Matchs réalisés"],
+                  ["3.5K", "Sessions/mois"],
+                  ["150+", "Compétences"],
+                  ["98%", "Satisfaction"],
+                ].map(([value, label]) => (
+                  <div
+                    key={label}
+                    className="bg-[#F6F7FB] rounded-2xl p-4 text-center"
+                  >
+                    <p className="text-2xl font-bold text-[#1800AD]">
+                      {value}
+                    </p>
+                    <p className="text-sm mt-1">{label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="absolute -left-3 bottom-[-22px] bg-white shadow-lg rounded-2xl px-5 py-3 flex items-center gap-3">
+              <span className="w-9 h-9 rounded-full bg-[#4D3AFF] text-white flex items-center justify-center">
+                🎓
+              </span>
+              <p className="font-bold">+50 XP gagnés</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* COMMENT ÇA MARCHE */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-5">
+          <div className="text-center mb-12">
+            <span className="inline-block bg-[#1800AD]/10 text-[#1800AD] font-bold px-4 py-2 text-sm rounded-full">
+              Simple et efficace
+            </span>
+
+            <h2 className="text-3xl md:text-4xl font-black text-[#1800AD] mt-5">
+              Comment ça marche ?
+            </h2>
+
+            <p className="text-base mt-4 max-w-2xl mx-auto">
+              En quelques étapes simples, commencez à échanger vos compétences
+              avec d’autres étudiants.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {steps.map((step) => (
+              <div
+                key={step.number}
+                className="relative bg-[#F6F7FB] rounded-3xl p-6 min-h-[260px]"
               >
-                {item}
-              </button>
+                <div className="w-12 h-12 rounded-2xl bg-[#1800AD] text-white flex items-center justify-center text-xl mb-5">
+                  {step.icon}
+                </div>
+
+                <p className="text-4xl font-black text-[#4D3AFF]/25">
+                  {step.number}
+                </p>
+
+                <h3 className="text-xl font-bold text-[#1800AD] mt-4">
+                  {step.title}
+                </h3>
+
+                <p className="text-base mt-3 leading-relaxed">{step.text}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-5 py-12 sm:py-16 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
-        <div>
-          <p className="text-[#DFB626] font-bold mb-3">
-            Plateforme étudiante collaborative
-          </p>
+      {/* AVANTAGES */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-5">
+          <div className="text-center mb-12">
+            <span className="inline-block bg-[#1800AD]/10 text-[#1800AD] font-bold px-4 py-2 text-sm rounded-full">
+              Pourquoi nous choisir
+            </span>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold leading-tight">
-            Partage tes compétences.
-          </h1>
+            <h2 className="text-3xl md:text-4xl font-black text-[#1800AD] mt-5">
+              Les avantages SkillSwap
+            </h2>
+          </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif mt-4 text-[#DFB626] leading-tight">
-            Trouve des étudiants pour apprendre plus vite.
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {advantages.map((item) => (
+              <div
+                key={item.title}
+                className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-[#F6F7FB] text-[#1800AD] flex items-center justify-center text-2xl mb-6">
+                  {item.icon}
+                </div>
+
+                <h3 className="text-xl font-bold text-[#1800AD]">
+                  {item.title}
+                </h3>
+
+                <p className="text-base mt-4 leading-relaxed">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-[#1800AD] text-white py-16 text-center">
+        <div className="max-w-5xl mx-auto px-5">
+          <h2 className="text-3xl md:text-4xl font-black">
+            Prêt à rejoindre la communauté ?
           </h2>
 
-          <p className="mt-6 text-gray-700 text-base sm:text-lg leading-relaxed max-w-xl">
-            Dev, Design, Langues, Marketing, Musique… Rejoins une communauté
-            d’étudiants passionnés, partage ce que tu sais et apprends ce que tu
-            aimes.
+          <p className="text-lg mt-5 text-white/80">
+            Inscrivez-vous gratuitement et commencez à échanger vos compétences
+            dès aujourd’hui.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
             <Link
-              href="/matchs"
-              className="bg-black text-white px-7 py-4 rounded-xl text-center hover:bg-[#DFB626] hover:text-black transition"
+              href="/"
+              className="bg-white text-[#1800AD] font-bold px-7 py-3 rounded-xl"
             >
-              Trouver des matchs
+              Créer un compte gratuit
             </Link>
 
             <Link
-              href="/register"
-              className="border border-black px-7 py-4 rounded-xl text-center hover:bg-black hover:text-white transition"
+              href="/"
+              className="border-2 border-white text-white font-bold px-7 py-3 rounded-xl"
             >
-              Proposer une compétence
+              J’ai déjà un compte
             </Link>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm">
-          <h3 className="text-2xl font-bold mb-6">Résumé étudiant</h3>
-
-          <div className="grid grid-cols-2 gap-4">
-            {["14 Sessions", "680 XP gagnés", "8 Badges", "4.8 Note moyenne"].map(
-              (item) => (
-                <Link
-                  href="/profil"
-                  key={item}
-                  className="bg-[#F5F5F5] rounded-2xl p-5 text-center hover:bg-[#DFB626] transition"
-                >
-                  <p className="font-bold text-2xl">{item.split(" ")[0]}</p>
-                  <p className="text-sm text-gray-600">
-                    {item.replace(item.split(" ")[0], "")}
-                  </p>
-                </Link>
-              )
-            )}
           </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-5 py-10">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl sm:text-3xl font-bold">Matchs suggérés</h3>
+      {/* COMPÉTENCES */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-5 text-center">
+          <span className="inline-block bg-[#1800AD]/10 text-[#1800AD] font-bold px-4 py-2 text-sm rounded-full">
+            Découvrez
+          </span>
 
-          <Link
-            href="/matchs"
-            className="text-sm sm:text-lg hover:text-[#DFB626]"
-          >
-            Voir tout →
-          </Link>
-        </div>
+          <h2 className="text-3xl md:text-4xl font-black text-[#1800AD] mt-5">
+            Exemples de compétences
+          </h2>
 
-        {filteredMatches.length === 0 ? (
-          <div className="bg-white rounded-2xl p-8 text-center">
-            Aucun match trouvé pour cette recherche.
-          </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
-            {filteredMatches.map((match) => (
-              <article
-                key={match.name}
-                className="relative bg-white border border-black rounded-xl p-6 min-h-[250px] hover:shadow-lg transition"
+          <p className="text-base mt-4">
+            Dev, Design, Langues, Marketing... Trouvez ou partagez toutes les
+            compétences imaginables.
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
+            {skills.map((skill) => (
+              <Link
+                href="/matchs"
+                key={skill.name}
+                className="bg-white border border-gray-200 rounded-full px-5 py-3 flex items-center justify-between hover:border-[#1800AD] transition"
               >
-                {match.best && (
-                  <span className="absolute -top-3 left-6 bg-[#DFB626] text-black px-5 py-1 rounded-full text-xs font-bold">
-                    Meilleur match
-                  </span>
-                )}
+                <span className="flex items-center gap-3 text-base font-semibold">
+                  <span>{skill.icon}</span>
+                  {skill.name}
+                </span>
 
-                <div className="flex justify-between items-start gap-4">
-                  <div className="flex gap-4 items-start">
-                    <div
-                      className={`w-14 h-14 rounded-full flex items-center justify-center font-serif text-xl ${
-                        match.initials === "TC"
-                          ? "bg-green-500"
-                          : match.initials === "SA"
-                          ? "bg-[#DFB626]"
-                          : "bg-blue-600 text-white"
-                      }`}
-                    >
-                      {match.initials}
-                    </div>
-
-                    <div>
-                      <h4 className="font-serif text-2xl leading-tight">
-                        {match.name}
-                      </h4>
-                      <p className="font-serif text-xl">{match.role}</p>
-                    </div>
-                  </div>
-
-                  <p className="font-serif text-right text-sm leading-5">
-                    {match.score}%
-                    <br />
-                    compatib.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mt-10">
-                  {match.tags.map((tag, index) => (
-                    <div
-                      key={tag}
-                      className="bg-[#F1F1F1] rounded-md px-3 py-2 flex items-center justify-center gap-2 font-serif text-base sm:text-lg"
-                    >
-                      <span
-                        className={`w-3 h-3 rounded-full ${
-                          index === 0 ? "bg-[#E8B7A3]" : "bg-purple-500"
-                        }`}
-                      />
-                      {tag}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex justify-between items-end mt-8">
-                  <div>
-                    <p className="text-xl tracking-widest text-[#DFB626]">
-                      {renderStars(match.rating)}
-                    </p>
-                    <p className="font-serif text-sm">{match.sessions}</p>
-                  </div>
-
-                  <Link
-                    href="/profil"
-                    className="bg-[#363030] text-white px-6 py-3 rounded-xl font-serif text-base hover:bg-black transition"
-                  >
-                    {match.best ? "Matcher" : "Voir profil"}
-                  </Link>
-                </div>
-              </article>
+                <span className="bg-[#F6F7FB] px-3 py-1 rounded-full text-sm">
+                  {skill.tag}
+                </span>
+              </Link>
             ))}
           </div>
-        )}
-      </section>
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-5 py-10">
-        <div className="flex justify-between items-center mb-5">
-          <h3 className="text-2xl sm:text-3xl font-bold">
-            Prochaines sessions
-          </h3>
 
           <Link
-            href="/sessions"
-            className="text-sm sm:text-lg hover:text-[#DFB626]"
+            href="/"
+            className="inline-block text-[#1800AD] font-bold text-lg mt-10"
           >
-            Voir tout →
+            Voir toutes les compétences →
           </Link>
-        </div>
-
-        <div className="space-y-5">
-          {sessions.map((session) => (
-            <Link
-              href="/sessions"
-              key={session.title}
-              className="block bg-white border border-gray-200 rounded-2xl p-5 hover:border-[#DFB626] hover:shadow-md transition"
-            >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-                <div className="flex items-center gap-5">
-                  <div className="bg-[#F5F5F5] w-20 h-16 rounded-xl flex flex-col items-center justify-center text-sm font-medium">
-                    <span>{session.day}</span>
-                    <span>{session.hour}</span>
-                  </div>
-
-                  <div>
-                    <h4 className="text-xl md:text-2xl font-bold">
-                      {session.title}
-                    </h4>
-
-                    <p className="text-gray-600">
-                      <span className="mr-2">{session.type}</span>
-                      {session.place}
-                    </p>
-                  </div>
-                </div>
-
-                <span
-                  className={`${getStatusClass(
-                    session.status
-                  )} px-6 py-2 rounded-full text-sm text-center`}
-                >
-                  {session.status}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-5 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <h3 className="text-2xl sm:text-3xl font-bold">Actualités</h3>
-
-          <Link
-            href="/feed"
-            className="text-sm sm:text-lg hover:text-[#DFB626]"
-          >
-            Voir tout →
-          </Link>
-        </div>
-
-        <div className="space-y-5">
-          {news.map((item) => (
-            <Link
-              key={item.title}
-              href="/feed"
-              className="flex items-center gap-5 bg-white border border-gray-200 rounded-2xl p-5 hover:border-[#DFB626] hover:shadow-md transition"
-            >
-              <div className="w-16 h-14 bg-[#DFB626] rounded-xl flex items-center justify-center text-2xl">
-                {item.icon}
-              </div>
-
-              <div>
-                <p className="text-lg sm:text-2xl font-bold">{item.title}</p>
-                <p className="text-sm text-gray-600">{item.meta}</p>
-              </div>
-            </Link>
-          ))}
         </div>
       </section>
 
