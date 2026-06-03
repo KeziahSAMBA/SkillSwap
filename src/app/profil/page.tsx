@@ -55,7 +55,7 @@ const initialProfiles: Profile[] = [
     slug: "sarah",
     initials: "SA",
     name: "Sarah Benali",
-    role: "E-business",
+    role: "Marketing digital",
     score: 89,
     rating: 4,
     sessions: 11,
@@ -71,6 +71,7 @@ const initialProfiles: Profile[] = [
     ],
   },
 ];
+
 
 function stars(rating: number) {
   return "★".repeat(rating) + "☆".repeat(5 - rating);

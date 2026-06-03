@@ -20,8 +20,14 @@ export default function GamificationPage() {
       <Header />
 
       <section className="max-w-7xl mx-auto px-5 py-12">
-        <p className="text-[#1800AD] font-bold">
-          Gamification
+        <p className="text-[#1800AD] font-bold">Gamification</p>
+
+        <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
+          Progresse et sois valorisé
+        </h1>
+
+        <p className="mt-3">
+          Points, badges, défis et niveau de progression.
         </p>
 
         <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
@@ -45,22 +51,16 @@ export default function GamificationPage() {
               key={label}
               className="bg-white border border-gray-100 rounded-3xl p-6 text-center shadow-sm"
             >
-              <p className="text-3xl font-bold text-[#1800AD]">
-                {value}
-              </p>
-
-              <p className="text-[#4A4A4A] mt-2">
-                {label}
-              </p>
+              <p className="text-3xl font-bold text-[#1800AD]">{value}</p>
+              <p className="mt-2">{label}</p>
             </div>
           ))}
         </div>
 
         {/* BADGES + DEFIS */}
         <div className="grid lg:grid-cols-2 gap-8 mt-10">
-          {/* BADGES */}
           <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-            <h2 className="text-2xl font-bold text-[#1800AD] mb-5">
+            <h2 className="text-2xl font-bold mb-5 text-[#1800AD]">
               Badges débloqués
             </h2>
 
@@ -68,7 +68,7 @@ export default function GamificationPage() {
               {badges.map((badge) => (
                 <div
                   key={badge}
-                  className="bg-[#F6F7FB] border border-[#1800AD]/10 rounded-2xl p-5 font-semibold hover:border-[#1800AD] transition"
+                  className="bg-[#F6F7FB] border border-[#E8E9F5] rounded-2xl p-5 font-bold hover:border-[#1800AD] transition"
                 >
                   {badge}
                 </div>
@@ -76,9 +76,8 @@ export default function GamificationPage() {
             </div>
           </div>
 
-          {/* DEFIS */}
           <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-            <h2 className="text-2xl font-bold text-[#1800AD] mb-5">
+            <h2 className="text-2xl font-bold mb-5 text-[#1800AD]">
               Défis actifs
             </h2>
 
@@ -86,11 +85,11 @@ export default function GamificationPage() {
               {challenges.map((challenge) => (
                 <div
                   key={challenge}
-                  className="flex items-center justify-between border-b border-gray-100 pb-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4"
                 >
                   <span>{challenge}</span>
 
-                  <button className="bg-[#1800AD] text-white px-4 py-2 rounded-xl font-medium hover:bg-[#4D3AFF] transition">
+                  <button className="bg-[#1800AD] text-white px-4 py-2 rounded-xl font-semibold hover:bg-[#4D3AFF] transition">
                     Relever
                   </button>
                 </div>
@@ -99,9 +98,8 @@ export default function GamificationPage() {
           </div>
         </div>
 
-        {/* PROGRESSION */}
         <div className="mt-10 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-2xl font-bold text-[#1800AD] mb-4">
+          <h2 className="text-2xl font-bold mb-4 text-[#1800AD]">
             Progression
           </h2>
 
@@ -109,41 +107,7 @@ export default function GamificationPage() {
             <div className="bg-[#1800AD] h-5 rounded-full w-[70%]" />
           </div>
 
-          <p className="mt-4 text-[#4A4A4A]">
-            70% vers le niveau suivant
-          </p>
-        </div>
-
-        {/* CLASSEMENT */}
-        <div className="mt-10 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-2xl font-bold text-[#1800AD] mb-5">
-            Classement du mois
-          </h2>
-
-          <div className="space-y-4">
-            {[
-              ["🥇", "Tom Couture", "680 XP"],
-              ["🥈", "Sarah Benali", "620 XP"],
-              ["🥉", "Kim Martin", "580 XP"],
-            ].map(([rank, name, xp]) => (
-              <div
-                key={name}
-                className="flex items-center justify-between bg-[#F6F7FB] rounded-2xl p-4"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{rank}</span>
-
-                  <div>
-                    <p className="font-semibold">{name}</p>
-                  </div>
-                </div>
-
-                <span className="font-bold text-[#1800AD]">
-                  {xp}
-                </span>
-              </div>
-            ))}
-          </div>
+          <p className="mt-3">70% vers le niveau suivant</p>
         </div>
       </section>
 
