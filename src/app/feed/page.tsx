@@ -1,141 +1,103 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-type FeedPost = {
-  id: string;
-  content: string;
-  createdAt: string;
-  author: { id: string; name: string };
-};
-
-function timeAgo(date: string) {
-  const diff = Date.now() - new Date(date).getTime();
-  const minutes = Math.floor(diff / 60000);
-  if (minutes < 60) return `Il y a ${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `Il y a ${hours}h`;
-  const days = Math.floor(hours / 24);
-  return `Il y a ${days} jour${days > 1 ? "s" : ""}`;
-}
-
-function initials(name: string) {
-  return name.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
-}
+const posts = [
+  {
+    icon: "🖼️",
+    title: "Tom a partagé son portfolio",
+    meta: "Il y a 2h · 24 likes",
+    type: "Réalisation",
+  },
+  {
+    icon: "🏆",
+    title: "Kim a obtenu le badge Top Formateur",
+    meta: "Il y a 5h · Badge débloqué",
+    type: "Badge",
+  },
+  {
+    icon: "💬",
+    title: "Sarah a recommandé Estelle pour la gestion de projet",
+    meta: "Il y a 1 jour · Recommandation",
+    type: "Recommandation",
+  },
+  {
+    icon: "⭐",
+    title: "Lucas a laissé un feedback après une session d’anglais",
+    meta: "Il y a 2 jours · Feedback",
+    type: "Feedback",
+  },
+];
 
 export default function FeedPage() {
-  const [posts, setPosts] = useState<FeedPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [content, setContent] = useState("");
-  const [posting, setPosting] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch("/api/v1/feed")
-      .then((r) => r.json())
-      .then((data) => setPosts(Array.isArray(data) ? data : []))
-      .catch(() => setPosts([]))
-      .finally(() => setLoading(false));
-  }, []);
-
-  async function handlePublish(e: React.FormEvent) {
-    e.preventDefault();
-    if (!content.trim()) return;
-    setPosting(true);
-    setError("");
-
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (!token) {
-      setError("Tu dois être connecté pour publier.");
-      setPosting(false);
-      return;
-    }
-
-    const res = await fetch("/api/v1/feed", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ content }),
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      setPosts((prev) => [data, ...prev]);
-      setContent("");
-    } else {
-      setError(data.message ?? "Erreur lors de la publication.");
-    }
-    setPosting(false);
-  }
-
   return (
-    <main className="min-h-screen bg-white text-black">
+    <main className="min-h-screen bg-[#F6F7FB] text-[#4A4A4A]">
       <Header />
 
       <section className="max-w-5xl mx-auto px-5 py-12">
-        <p className="text-[#DFB626] font-bold">Feed social</p>
-        <h1 className="text-5xl font-serif font-bold mt-2">Valorise tes réalisations</h1>
-        <p className="text-gray-600 mt-3">
+        <p className="text-[#1800AD] font-bold">Feed social</p>
+
+        <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
+          Valorise tes réalisations
+        </h1>
+
+        <p className="mt-3">
           Publications, recommandations et feedbacks entre étudiants.
         </p>
 
-        <form onSubmit={handlePublish} className="border border-gray-200 rounded-3xl p-6 mt-10">
+        <div className="bg-white border border-gray-100 rounded-3xl p-6 mt-10 shadow-sm">
           <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
             placeholder="Partage une réalisation, une recommandation ou un feedback..."
-            className="w-full min-h-28 outline-none resize-none"
+            className="w-full min-h-28 outline-none resize-none text-[#4A4A4A] placeholder:text-gray-400"
           />
-          {error && (
-            <p className="text-red-600 text-sm mt-2">{error}</p>
-          )}
+
           <div className="flex justify-end mt-4">
-            <button
-              type="submit"
-              disabled={posting || !content.trim()}
-              className="bg-black text-white px-6 py-3 rounded-xl hover:bg-[#DFB626] hover:text-black transition disabled:opacity-50"
-            >
-              {posting ? "Publication…" : "Publier"}
+            <button className="bg-[#1800AD] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition">
+              Publier
             </button>
           </div>
-        </form>
+        </div>
 
         <div className="space-y-6 mt-8">
-          {loading ? (
-            <div className="flex justify-center py-12">
-              <p className="text-gray-500">Chargement du feed…</p>
-            </div>
-          ) : posts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 border border-dashed border-gray-300 rounded-3xl gap-3">
-              <p className="text-4xl">📭</p>
-              <p className="text-gray-600 font-medium text-xl">Aucune publication pour l&apos;instant.</p>
-              <p className="text-gray-400 text-sm text-center max-w-xs">
-                Sois le premier à partager une réalisation ou à laisser un feedback !
-              </p>
-            </div>
-          ) : (
-            posts.map((post) => (
-              <article
-                key={post.id}
-                className="border border-gray-200 rounded-3xl p-6 hover:shadow-md transition"
-              >
-                <div className="flex gap-5">
-                  <div className="w-14 h-14 bg-[#DFB626] rounded-2xl flex items-center justify-center text-xl font-bold shrink-0">
-                    {initials(post.author.name)}
+          {posts.map((post) => (
+            <article
+              key={post.title}
+              className="bg-white border border-gray-100 rounded-3xl p-6 hover:shadow-lg transition"
+            >
+              <div className="flex gap-5">
+                <div className="w-14 h-14 bg-[#1800AD]/10 text-[#1800AD] rounded-2xl flex items-center justify-center text-2xl">
+                  {post.icon}
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <h3 className="text-xl font-bold text-[#1800AD]">
+                      {post.title}
+                    </h3>
+
+                    <span className="bg-[#F6F7FB] text-[#1800AD] px-3 py-1 rounded-full text-sm font-medium">
+                      {post.type}
+                    </span>
                   </div>
 
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-bold">{post.author.name}</h3>
-                      <span className="text-gray-400 text-sm">{timeAgo(post.createdAt)}</span>
-                    </div>
-                    <p className="text-gray-800 whitespace-pre-line">{post.content}</p>
+                  <p className="text-sm text-gray-500 mt-1">{post.meta}</p>
+
+                  <div className="flex flex-wrap gap-5 mt-5 text-sm font-medium text-[#4A4A4A]">
+                    <button className="hover:text-[#1800AD] transition">
+                      👍 Like
+                    </button>
+
+                    <button className="hover:text-[#1800AD] transition">
+                      💬 Commenter
+                    </button>
+
+                    <button className="hover:text-[#1800AD] transition">
+                      ↗ Partager
+                    </button>
                   </div>
                 </div>
-              </article>
-            ))
-          )}
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 

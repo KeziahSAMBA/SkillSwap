@@ -1,120 +1,72 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [teach, setTeach] = useState("");
-  const [learn, setLearn] = useState("");
-  const [level, setLevel] = useState("");
-  const [availability, setAvailability] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    const res = await fetch("/api/v1/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-
-    const data = await res.json();
-    setLoading(false);
-
-    if (!res.ok) {
-      setError(data.message ?? "Erreur lors de l'inscription.");
-      return;
-    }
-
-    localStorage.setItem("token", data.token);
-    if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
-    router.push("/profil");
-  }
-
   return (
-    <main className="min-h-screen bg-[#F5F5F5] flex items-center justify-center px-5">
-      <div className="bg-white rounded-3xl p-8 w-full max-w-xl">
-        <img src="/logo-6you.png" className="h-12 mb-8" alt="SkillSwap" />
+    <main className="min-h-screen bg-[#F6F7FB] flex items-center justify-center px-5 py-10">
+      <div className="bg-white border border-[#E8E9F5] rounded-3xl p-8 w-full max-w-xl shadow-sm">
+        <img
+          src="/logo-6you.jpeg"
+          className="h-12 mb-8"
+          alt="SkillSwap"
+        />
 
-        <h1 className="text-3xl font-bold">Inscription</h1>
-        <p className="text-gray-600 mt-2">Crée ton profil étudiant initial.</p>
+        <p className="text-[#1800AD] font-bold mb-2">
+          Rejoins la communauté SkillSwap
+        </p>
 
-        <form className="grid md:grid-cols-2 gap-4 mt-8" onSubmit={handleSubmit}>
-          {error && (
-            <p className="md:col-span-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2">
-              {error}
-            </p>
-          )}
+        <h1 className="text-3xl font-bold text-[#1800AD]">
+          Inscription
+        </h1>
 
+        <p className="text-[#4A4A4A] mt-2">
+          Crée ton profil étudiant et commence à partager tes compétences.
+        </p>
+
+        <form className="grid md:grid-cols-2 gap-4 mt-8">
           <input
+            className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
             placeholder="Nom complet"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className="border rounded-xl px-4 py-3"
-          />
-          <input
-            type="email"
-            placeholder="Email étudiant"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="border rounded-xl px-4 py-3"
-          />
-          <input
-            placeholder="Compétence à enseigner"
-            value={teach}
-            onChange={(e) => setTeach(e.target.value)}
-            className="border rounded-xl px-4 py-3"
-          />
-          <input
-            placeholder="Compétence à apprendre"
-            value={learn}
-            onChange={(e) => setLearn(e.target.value)}
-            className="border rounded-xl px-4 py-3"
-          />
-          <input
-            placeholder="Niveau"
-            value={level}
-            onChange={(e) => setLevel(e.target.value)}
-            className="border rounded-xl px-4 py-3"
-          />
-          <input
-            placeholder="Disponibilités"
-            value={availability}
-            onChange={(e) => setAvailability(e.target.value)}
-            className="border rounded-xl px-4 py-3"
-          />
-          <input
-            type="password"
-            placeholder="Mot de passe"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="md:col-span-2 border rounded-xl px-4 py-3"
           />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="md:col-span-2 bg-black text-white text-center py-3 rounded-xl hover:bg-[#DFB626] hover:text-black transition disabled:opacity-60"
+          <input
+            className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
+            placeholder="Email étudiant"
+          />
+
+          <input
+            className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
+            placeholder="Compétence à enseigner"
+          />
+
+          <input
+            className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
+            placeholder="Compétence à apprendre"
+          />
+
+          <input
+            className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
+            placeholder="Niveau"
+          />
+
+          <input
+            className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
+            placeholder="Disponibilités"
+          />
+
+          <Link
+            href="/"
+            className="md:col-span-2 bg-[#1800AD] text-white font-semibold text-center py-3 rounded-xl hover:bg-[#4D3AFF] transition"
           >
-            {loading ? "Création…" : "Créer mon profil"}
-          </button>
+            Créer mon profil
+          </Link>
         </form>
 
-        <p className="text-sm mt-6">
+        <p className="text-sm text-[#4A4A4A] mt-6">
           Déjà inscrit ?{" "}
-          <Link href="/login" className="text-[#DFB626] font-bold">
+          <Link
+            href="/"
+            className="text-[#1800AD] font-bold hover:text-[#4D3AFF] transition"
+          >
             Connexion
           </Link>
         </p>
