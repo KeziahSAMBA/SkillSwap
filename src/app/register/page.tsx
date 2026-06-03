@@ -8,101 +8,109 @@ export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setLoading(true);
 
-    const res = await fetch("/api/v1/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch("/api/v1/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      const data = await res.json();
 
-    if (!res.ok) {
-      setError(data.message ?? "Erreur lors de l'inscription.");
-      return;
+      if (!res.ok) {
+        setError(data.message ?? "Erreur lors de l'inscription.");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("skillswapUser", JSON.stringify(data.user));
+      window.dispatchEvent(new Event("storage"));
+
+      setSuccess("Compte créé ! Redirection…");
+      setTimeout(() => router.push("/profil"), 1000);
+    } catch {
+      setError("Impossible de contacter le serveur. Réessaie.");
+    } finally {
+      setLoading(false);
     }
-
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    router.push("/");
   }
 
   return (
-    <main className="min-h-screen bg-[#F5F5F5] flex items-center justify-center px-5">
-      <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-sm">
-        <h1 className="text-3xl font-serif font-bold mb-2">Créer un compte</h1>
-        <p className="text-gray-500 text-sm mb-8">
-          Déjà inscrit ?{" "}
-          <Link href="/login" className="text-black font-medium hover:text-[#DFB626]">
-            Connecte-toi
-          </Link>
+    <main className="min-h-screen bg-[#F6F7FB] flex items-center justify-center px-5 py-10">
+      <div className="bg-white border border-[#E8E9F5] rounded-3xl p-8 w-full max-w-xl shadow-sm">
+        <img src="/logo-6you.jpeg" className="h-12 mb-8" alt="SkillSwap" />
+
+        <p className="text-[#1800AD] font-bold mb-2">Rejoins la communauté SkillSwap</p>
+        <h1 className="text-3xl font-bold text-[#1800AD]">Inscription</h1>
+        <p className="text-[#4A4A4A] mt-2">
+          Crée ton profil étudiant et commence à partager tes compétences.
         </p>
 
         {error && (
-          <p className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2">
+          <p className="mt-6 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2">
             {error}
           </p>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Nom complet</label>
-            <input
-              type="text"
-              required
-              value={form.name}
-              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              placeholder="Prénom Nom"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-black transition"
-            />
-          </div>
+        {success && (
+          <p className="mt-6 text-sm text-green-700 bg-green-50 border border-green-200 rounded-xl px-4 py-2">
+            {success}
+          </p>
+        )}
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <input
-              type="email"
-              required
-              value={form.email}
-              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-              placeholder="ton@email.com"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-black transition"
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4 mt-8">
+          <input
+            type="text"
+            required
+            value={form.name}
+            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            placeholder="Nom complet"
+            className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
+          />
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Mot de passe</label>
-            <input
-              type="password"
-              required
-              minLength={6}
-              value={form.password}
-              onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-              placeholder="Minimum 6 caractères"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-black transition"
-            />
-          </div>
+          <input
+            type="email"
+            required
+            value={form.email}
+            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+            placeholder="Email étudiant"
+            className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
+          />
+
+          <input
+            type="password"
+            required
+            minLength={6}
+            value={form.password}
+            onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+            placeholder="Mot de passe (min. 6 caractères)"
+            className="md:col-span-2 border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none text-[#4A4A4A] focus:border-[#1800AD] focus:ring-2 focus:ring-[#1800AD]/10 transition"
+          />
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-4 rounded-xl font-medium hover:bg-[#DFB626] hover:text-black transition disabled:opacity-60"
+            className="md:col-span-2 bg-[#1800AD] text-white font-semibold text-center py-3 rounded-xl hover:bg-[#4D3AFF] transition disabled:opacity-60"
           >
-            {loading ? "Création du compte…" : "S'inscrire"}
+            {loading ? "Création du compte…" : "Créer mon profil"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <Link href="/" className="text-sm text-gray-400 hover:text-black">
-            ← Retour à l&apos;accueil
+        <p className="text-sm text-[#4A4A4A] mt-6">
+          Déjà inscrit ?{" "}
+          <Link href="/login" className="text-[#1800AD] font-bold hover:text-[#4D3AFF] transition">
+            Connexion
           </Link>
-        </div>
+        </p>
       </div>
     </main>
   );
