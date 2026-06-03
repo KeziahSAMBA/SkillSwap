@@ -29,30 +29,6 @@ export default function Footer() {
 
           </div>
 
-          {/* Produit */}
-          <div>
-            <h3 className="font-bold text-2xl mb-5 text-[#BDB7FF]">
-              Produit
-            </h3>
-
-            <div className="flex flex-col gap-3 text-lg">
-              <Link href="/matchs" className="hover:text-[#BDB7FF] transition">
-                Matching
-              </Link>
-
-              <Link href="/sessions" className="hover:text-[#BDB7FF] transition">
-                Sessions
-              </Link>
-
-              <Link href="/gamification" className="hover:text-[#BDB7FF] transition">
-                Badges
-              </Link>
-
-              <Link href="/feed" className="hover:text-[#BDB7FF] transition">
-                Feed Social
-              </Link>
-            </div>
-          </div>
 
           {/* À propos */}
           <div>
@@ -67,10 +43,6 @@ export default function Footer() {
 
               <Link href="/" className="hover:text-[#BDB7FF] transition">
                 Contact
-              </Link>
-
-              <Link href="/profil" className="hover:text-[#BDB7FF] transition">
-                Mon compte
               </Link>
             </div>
           </div>

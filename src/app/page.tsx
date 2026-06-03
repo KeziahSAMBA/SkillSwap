@@ -313,7 +313,7 @@ export default function Home() {
           </div>
 
           <Link
-            href="/matchs"
+            href="/login"
             className="inline-block text-[#1800AD] font-bold text-lg mt-10"
           >
             Voir toutes les compétences →

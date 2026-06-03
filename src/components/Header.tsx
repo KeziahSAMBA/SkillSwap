@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type User = {
@@ -10,12 +11,29 @@ type User = {
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHomepage = pathname === "/";
+  const showNav = user || !isHomepage;
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("skillswapUser");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    const readUser = () => {
+      const savedUser = localStorage.getItem("skillswapUser");
+      setUser(savedUser ? JSON.parse(savedUser) : null);
+    };
+
+    const killSession = () => {
+      localStorage.removeItem("skillswapUser");
+      localStorage.removeItem("token");
+    };
+
+    readUser();
+    window.addEventListener("storage", readUser);
+    window.addEventListener("beforeunload", killSession);
+    return () => {
+      window.removeEventListener("storage", readUser);
+      window.removeEventListener("beforeunload", killSession);
+    };
   }, []);
 
   const initials = user?.name
@@ -27,16 +45,18 @@ export default function Header() {
 
   const logout = () => {
     localStorage.removeItem("skillswapUser");
+    localStorage.removeItem("token");
     setUser(null);
+    router.push("/");
   };
 
-  const privateLinks = [
-    { href: "/profil", label: "Accueil" },
+  const links = [
+    { href: "/profil", label: "Profil" },
     { href: "/matchs", label: "Matching" },
     { href: "/sessions", label: "Sessions" },
     { href: "/gamification", label: "Gamification" },
     { href: "/feed", label: "Feed social" },
-    { href: "/messages", label: "Messages" },
+    { href: "/message", label: "Messages" },
   ];
 
   return (
@@ -46,26 +66,30 @@ export default function Header() {
           <img src="/logo-6you.jpeg" alt="SkillSwap" className="h-10 w-auto" />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-[#4A4A4A]">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="hover:text-[#1800AD] transition"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        {showNav && (
+          <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-[#4A4A4A]">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="hover:text-[#1800AD] transition"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        )}
 
         <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/feed"
-            className="relative text-xl text-[#1800AD] hover:text-[#4D3AFF] transition"
-          >
-            🔔
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#4D3AFF] rounded-full" />
-          </Link>
+          {showNav && (
+            <Link
+              href="/feed"
+              className="relative text-xl text-[#1800AD] hover:text-[#4D3AFF] transition"
+            >
+              🔔
+              <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#4D3AFF] rounded-full" />
+            </Link>
+          )}
 
           {user ? (
             <>
@@ -102,15 +126,17 @@ export default function Header() {
           )}
         </div>
 
-        <button
-          onClick={() => setOpen(!open)}
-          className="lg:hidden text-3xl text-[#1800AD]"
-        >
-          ☰
-        </button>
+        {showNav && (
+          <button
+            onClick={() => setOpen(!open)}
+            className="lg:hidden text-3xl text-[#1800AD]"
+          >
+            ☰
+          </button>
+        )}
       </div>
 
-      {open && (
+      {open && showNav && (
         <div className="lg:hidden px-5 pb-5 flex flex-col gap-4 bg-white border-t border-[#E8E9F5]">
           {links.map((link) => (
             <Link

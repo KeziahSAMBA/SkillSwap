@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AnimatedBackground from "@/components/AnimatedBackground";
@@ -95,7 +95,7 @@ function makeInitials(name: string) {
     .toUpperCase();
 }
 
-export default function ProfilPage() {
+function ProfilContent() {
   const searchParams = useSearchParams();
   const selected = searchParams.get("user") || "tom";
 
@@ -233,107 +233,7 @@ export default function ProfilPage() {
             </button>
           </div>
 
-          <div className="grid lg:grid-cols-[360px_1fr] gap-10">
-            <aside className="space-y-4">
-              {profiles.map((item) => {
-                const active = item.slug === profile.slug;
-
-                return (
-                  <Link
-                    key={item.slug}
-                    href={`/profil?user=${item.slug}`}
-                    className={`block bg-white border rounded-3xl p-5 transition ${
-                      active
-                        ? "border-[#1800AD] shadow-md"
-                        : "border-gray-100 hover:border-[#1800AD]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="relative">
-                        <div
-                          className={`w-14 h-14 rounded-full ${item.color} text-white flex items-center justify-center font-bold`}
-                        >
-                          {item.initials}
-                        </div>
-
-                        <span
-                          className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${presenceColor(
-                            item.presence
-                          )}`}
-                        />
-                      </div>
-
-                      <div className="flex-1">
-                        <h2 className="font-bold text-[#1800AD]">
-                          {item.name}
-                        </h2>
-                        <p className="text-sm">{item.role}</p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {item.lastSeen}
-                        </p>
-                      </div>
-
-                      <span className="text-sm font-bold text-green-700">
-                        {item.score}%
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
-
-              <div className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
-                <h2 className="font-bold text-[#1800AD] mb-4">
-                  Ajouter un profil
-                </h2>
-
-                <div className="space-y-3">
-                  <input
-                    value={newProfile.name}
-                    onChange={(e) =>
-                      setNewProfile({ ...newProfile, name: e.target.value })
-                    }
-                    placeholder="Nom complet"
-                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
-                  />
-
-                  <input
-                    value={newProfile.role}
-                    onChange={(e) =>
-                      setNewProfile({ ...newProfile, role: e.target.value })
-                    }
-                    placeholder="Spécialité / rôle"
-                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
-                  />
-
-                  <input
-                    value={newProfile.skills}
-                    onChange={(e) =>
-                      setNewProfile({ ...newProfile, skills: e.target.value })
-                    }
-                    placeholder="Compétences séparées par virgule"
-                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
-                  />
-
-                  <textarea
-                    value={newProfile.bio}
-                    onChange={(e) =>
-                      setNewProfile({ ...newProfile, bio: e.target.value })
-                    }
-                    placeholder="Bio courte"
-                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none resize-none focus:border-[#1800AD]"
-                  />
-
-                  <button
-                    onClick={createProfile}
-                    className="w-full bg-[#1800AD] text-white py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
-                  >
-                    Ajouter le profil
-                  </button>
-                </div>
-              </div>
-            </aside>
-
-            <section className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm">
+          <section className="bg-white border border-gray-100 rounded-3xl p-6 md:p-10 shadow-sm">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
                 <div className="flex items-center gap-5">
                   <div className="relative">
@@ -555,12 +455,19 @@ export default function ProfilPage() {
                   Voir les feedbacks
                 </Link>
               </div>
-            </section>
-          </div>
+          </section>
         </section>
 
         <Footer />
       </div>
     </main>
+  );
+}
+
+export default function ProfilPage() {
+  return (
+    <Suspense>
+      <ProfilContent />
+    </Suspense>
   );
 }
