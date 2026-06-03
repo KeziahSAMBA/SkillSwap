@@ -71,7 +71,7 @@ export default function SessionsPage() {
   }, [activeFilter]);
 
   return (
-    <main className="relative min-h-screen bg-[#F6F7FB] text-[#4A4A4A] overflow-hidden">
+    <main className="relative min-h-screen bg-[#F6F7FB] text-[#4A4A4A] overflow-hidden pt-30">
       <AnimatedBackground />
 
       <div className="relative z-10">

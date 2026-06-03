@@ -5,12 +5,17 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import AnimatedBackground from "@/components/AnimatedBackground";
 
 type Availability = {
   day: string;
   hour: string;
   available: boolean;
+};
+
+type Badge = {
+  name: string;
+  description: string;
+  emoji: string;
 };
 
 type Profile = {
@@ -25,9 +30,10 @@ type Profile = {
   color: string;
   presence: string;
   lastSeen: string;
-  skills: string[];
+  skills: { name: string; level: string }[];
   bio: string;
   availability: Availability[];
+  badges: Badge[];
 };
 
 const initialProfiles: Profile[] = [
@@ -43,8 +49,19 @@ const initialProfiles: Profile[] = [
     color: "bg-[#1800AD]",
     presence: "online",
     lastSeen: "En ligne maintenant",
-    skills: ["React.js", "Node.js", "Next.js"],
-    bio: "Passionné de front-end, j’aide les étudiants à progresser sur React, Next.js et Node.js.",
+    skills: [
+      { name: "React.js", level: "EXPERT" },
+      { name: "Node.js", level: "ADVANCED" },
+      { name: "Next.js", level: "INTERMEDIATE" },
+    ],
+    bio: "Passionné de front-end, j'aide les étudiants à progresser sur React, Next.js et Node.js.",
+    badges: [
+      { name: "Premier pas", description: "A partagé sa première compétence", emoji: "👣" },
+      { name: "Mentor", description: "A aidé 5 étudiants ou plus", emoji: "🎓" },
+      { name: "Curieux", description: "A appris 3 compétences différentes", emoji: "🔍" },
+      { name: "Expert", description: "Niveau EXPERT dans au moins une compétence", emoji: "🏆" },
+      { name: "Sociable", description: "A posté 10 fois sur le feed", emoji: "💬" },
+    ],
     availability: [
       { day: "Lundi", hour: "14h - 15h", available: true },
       { day: "Mercredi", hour: "18h - 19h", available: true },
@@ -63,8 +80,16 @@ const initialProfiles: Profile[] = [
     color: "bg-[#4D3AFF]",
     presence: "away",
     lastSeen: "Vue il y a 12 min",
-    skills: ["SEO", "Canva", "Marketing"],
+    skills: [
+      { name: "SEO", level: "ADVANCED" },
+      { name: "Canva", level: "EXPERT" },
+      { name: "Marketing", level: "INTERMEDIATE" },
+    ],
     bio: "Spécialisée en marketing digital, SEO et création de contenus visuels.",
+    badges: [
+      { name: "Mentor", description: "A aidé 5 étudiants ou plus", emoji: "🎓" },
+      { name: "Premier pas", description: "A partagé sa première compétence", emoji: "👣" },
+    ],
     availability: [
       { day: "Mardi", hour: "12h - 13h", available: true },
       { day: "Jeudi", hour: "16h - 17h", available: false },
@@ -83,37 +108,19 @@ function presenceColor(presence: string) {
   return "bg-gray-400";
 }
 
-function makeSlug(name: string) {
-  return name.toLowerCase().trim().replace(/\s+/g, "-");
-}
-
-function makeInitials(name: string) {
-  return name
-    .split(" ")
-    .map((word) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 
 function ProfilContent() {
   const searchParams = useSearchParams();
   const selected = searchParams.get("user") || "tom";
 
   const [profiles, setProfiles] = useState<Profile[]>(initialProfiles);
-  const [editMode, setEditMode] = useState(false);
-  const [newSkill, setNewSkill] = useState("");
+  const [editBio, setEditBio] = useState(false);
+  const [editIdentity, setEditIdentity] = useState(false);
+  const [newSkill, setNewSkill] = useState({ name: "", level: "BEGINNER" });
   const [newAvailability, setNewAvailability] = useState({
     day: "",
     hour: "",
     available: true,
-  });
-
-  const [newProfile, setNewProfile] = useState({
-    name: "",
-    role: "",
-    bio: "",
-    skills: "",
   });
 
   const profile = profiles.find((p) => p.slug === selected) || profiles[0];
@@ -127,24 +134,24 @@ function ProfilContent() {
   };
 
   const addSkill = () => {
-    if (!newSkill.trim()) return;
+    if (!newSkill.name.trim()) return;
 
     setProfiles((current) =>
       current.map((item) =>
         item.slug === profile.slug
-          ? { ...item, skills: [...item.skills, newSkill.trim()] }
+          ? { ...item, skills: [...item.skills, { name: newSkill.name.trim(), level: newSkill.level }] }
           : item
       )
     );
 
-    setNewSkill("");
+    setNewSkill({ name: "", level: "BEGINNER" });
   };
 
-  const removeSkill = (skill: string) => {
+  const removeSkill = (skillName: string) => {
     setProfiles((current) =>
       current.map((item) =>
         item.slug === profile.slug
-          ? { ...item, skills: item.skills.filter((s) => s !== skill) }
+          ? { ...item, skills: item.skills.filter((s) => s.name !== skillName) }
           : item
       )
     );
@@ -171,75 +178,42 @@ function ProfilContent() {
     });
   };
 
-  const createProfile = () => {
-    if (!newProfile.name.trim() || !newProfile.role.trim()) return;
-
-    const profileToAdd: Profile = {
-      slug: makeSlug(newProfile.name),
-      initials: makeInitials(newProfile.name),
-      name: newProfile.name,
-      role: newProfile.role,
-      score: 75,
-      rating: 4,
-      sessions: 0,
-      xp: 0,
-      color: "bg-[#1800AD]",
-      presence: "offline",
-      lastSeen: "Nouveau profil",
-      skills: newProfile.skills
-        .split(",")
-        .map((skill) => skill.trim())
-        .filter(Boolean),
-      bio: newProfile.bio || "Nouveau profil étudiant SkillSwap.",
-      availability: [],
-    };
-
-    setProfiles((current) => [...current, profileToAdd]);
-
-    setNewProfile({
-      name: "",
-      role: "",
-      bio: "",
-      skills: "",
-    });
-  };
 
   return (
-    <main className="relative min-h-screen bg-[#F6F7FB] text-[#4A4A4A] overflow-hidden">
-      <AnimatedBackground />
+    <main className="relative min-h-screen text-white overflow-hidden">
+      {/* Background image + overlay */}
+      <div className="absolute inset-0" style={{ backgroundImage: "url('/students.jpg')", backgroundSize: "cover", backgroundPosition: "top" }} />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
 
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-7xl mx-auto px-5 py-10">
+        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
           <div className="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
             <div>
-              <p className="text-[#1800AD] font-bold">Profils étudiants</p>
+              <span className="inline-block backdrop-blur-[4px] bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
+                Profils étudiants
+              </span>
 
-              <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
+              <h1 className="text-3xl md:text-4xl font-black mt-4 text-[#a594ff]">
                 Gérer les profils et compétences
               </h1>
 
-              <p className="mt-3">
+              <p className="mt-3 text-white/70">
                 Consulte, modifie ou ajoute un profil étudiant avec ses
                 compétences et disponibilités.
               </p>
             </div>
 
-            <button
-              onClick={() => setEditMode(!editMode)}
-              className="bg-[#1800AD] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
-            >
-              {editMode ? "Quitter modification" : "Modifier le profil"}
-            </button>
+
           </div>
 
-          <section className="bg-white border border-gray-100 rounded-3xl p-6 md:p-10 shadow-sm">
+          <section className="backdrop-blur-[8px] bg-white/10 border border-white/20 rounded-3xl p-6 md:p-10 shadow-lg">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
                 <div className="flex items-center gap-5">
                   <div className="relative">
                     <div
-                      className={`w-24 h-24 rounded-full ${profile.color} text-white flex items-center justify-center text-3xl font-bold`}
+                      className={`w-24 h-24 rounded-full ${profile.color} text-white flex items-center justify-center text-3xl font-bold border-2 border-white/30`}
                     >
                       {profile.initials}
                     </div>
@@ -251,119 +225,163 @@ function ProfilContent() {
                     />
                   </div>
 
-                  <div>
-                    {editMode ? (
-                      <div className="space-y-3">
-                        <input
-                          value={profile.name}
-                          onChange={(e) => updateProfile("name", e.target.value)}
-                          className="border border-[#E8E9F5] rounded-xl px-4 py-2 outline-none focus:border-[#1800AD]"
-                        />
+                  <div className="flex items-start gap-3">
+                    <div>
+                      {editIdentity ? (
+                        <div className="space-y-2">
+                          <input
+                            value={profile.name}
+                            onChange={(e) => updateProfile("name", e.target.value)}
+                            className="bg-white/10 border border-white/30 rounded-xl px-4 py-2 outline-none focus:border-[#a594ff] text-white placeholder-white/50 w-full"
+                          />
+                          <input
+                            value={profile.role}
+                            onChange={(e) => updateProfile("role", e.target.value)}
+                            className="bg-white/10 border border-white/30 rounded-xl px-4 py-2 outline-none focus:border-[#a594ff] text-white placeholder-white/50 w-full"
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <h2 className="text-2xl md:text-3xl font-bold text-[#a594ff]">
+                            {profile.name}
+                          </h2>
+                          <p className="text-white/80">{profile.role}</p>
+                        </>
+                      )}
+                      <p className="text-sm text-white/50 mt-1">{profile.lastSeen}</p>
+                      <p className="text-[#a594ff] mt-2">{stars(profile.rating)}</p>
+                    </div>
 
-                        <input
-                          value={profile.role}
-                          onChange={(e) => updateProfile("role", e.target.value)}
-                          className="border border-[#E8E9F5] rounded-xl px-4 py-2 outline-none focus:border-[#1800AD]"
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <h2 className="text-2xl md:text-3xl font-bold text-[#1800AD]">
-                          {profile.name}
-                        </h2>
-                        <p>{profile.role}</p>
-                      </>
-                    )}
-
-                    <p className="text-sm text-gray-500 mt-1">
-                      {profile.lastSeen}
-                    </p>
-                    <p className="text-[#1800AD] mt-2">
-                      {stars(profile.rating)}
-                    </p>
+                    <button
+                      onClick={() => setEditIdentity(!editIdentity)}
+                      className="text-xs text-white/50 border border-white/20 rounded-lg px-2 py-0.5 hover:text-white hover:border-white/40 transition shrink-0"
+                    >
+                      {editIdentity ? "Valider" : "Modifier"}
+                    </button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3 text-center">
-                  <div className="bg-[#1800AD] text-white rounded-2xl p-4">
-                    <p className="font-bold">{profile.score}%</p>
-                    <p className="text-xs">Match</p>
+                  <div className="backdrop-blur-[4px] bg-white/20 border border-white/30 rounded-2xl p-4">
+                    <p className="font-bold text-white">{profile.score}%</p>
+                    <p className="text-xs text-white/60">Match</p>
                   </div>
 
-                  <div className="border border-gray-100 rounded-2xl p-4">
-                    <p className="font-bold text-[#1800AD]">
+                  <div className="backdrop-blur-[4px] bg-black/20 border border-white/15 rounded-2xl p-4">
+                    <p className="font-bold text-[#a594ff]">
                       {profile.sessions}
                     </p>
-                    <p className="text-xs">Sessions</p>
+                    <p className="text-xs text-white/60">Sessions</p>
                   </div>
 
-                  <div className="bg-[#1800AD]/10 rounded-2xl p-4">
-                    <p className="font-bold text-[#1800AD]">{profile.xp}</p>
-                    <p className="text-xs">XP</p>
+                  <div className="backdrop-blur-[4px] bg-black/20 border border-white/15 rounded-2xl p-4">
+                    <p className="font-bold text-[#a594ff]">{profile.xp}</p>
+                    <p className="text-xs text-white/60">XP</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-8">
-                <h3 className="font-bold text-xl mb-2 text-[#1800AD]">Bio</h3>
+              {/* Badges */}
+              {(profile.badges ?? []).length > 0 && (
+                <div className="mt-6 inline-flex flex-col gap-3 backdrop-blur-[4px] bg-white/5 border border-white/20 rounded-2xl px-5 py-4">
+                  <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest">Badges</h3>
+                  <div className="flex flex-wrap gap-5">
+                    {(profile.badges ?? []).map((badge) => (
+                      <div key={badge.name} className="relative group flex flex-col items-center gap-1">
+                        <span className="text-3xl cursor-default">{badge.emoji}</span>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black/80 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                          {badge.name}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-                {editMode ? (
+              <div className="mt-8">
+                <div className="flex items-center gap-3 mb-2">
+                  <h3 className="font-bold text-xl text-[#a594ff]">Bio</h3>
+                  {!editBio ? (
+                    <button
+                      onClick={() => setEditBio(true)}
+                      className="text-xs text-white/50 border border-white/20 rounded-lg px-2 py-0.5 hover:text-white hover:border-white/40 transition"
+                    >
+                      Modifier
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setEditBio(false)}
+                      className="text-xs text-[#a594ff] border border-[#a594ff]/40 rounded-lg px-2 py-0.5 hover:bg-[#a594ff]/10 transition"
+                    >
+                      Valider
+                    </button>
+                  )}
+                </div>
+
+                {editBio ? (
                   <textarea
                     value={profile.bio}
                     onChange={(e) => updateProfile("bio", e.target.value)}
-                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none resize-none focus:border-[#1800AD]"
+                    rows={3}
+                    className="w-full bg-white/10 border border-white/30 rounded-xl px-4 py-3 outline-none resize-none focus:border-[#a594ff] text-white placeholder-white/50 transition"
                   />
                 ) : (
-                  <p>{profile.bio}</p>
+                  <p className="text-white/80">{profile.bio}</p>
                 )}
               </div>
 
               <div className="mt-8">
-                <h3 className="font-bold text-xl mb-3 text-[#1800AD]">
+                <h3 className="font-bold text-xl mb-3 text-[#a594ff]">
                   Compétences
                 </h3>
 
                 <div className="flex flex-wrap gap-3">
                   {profile.skills.map((skill) => (
                     <span
-                      key={skill}
-                      className="bg-[#1800AD]/10 text-[#1800AD] px-4 py-2 rounded-full font-medium flex items-center gap-2"
+                      key={skill.name}
+                      className="backdrop-blur-[4px] bg-white/15 border border-white/25 text-white px-4 py-2 rounded-full font-medium flex items-center gap-2"
                     >
-                      {skill}
-
-                      {editMode && (
-                        <button
-                          onClick={() => removeSkill(skill)}
-                          className="text-red-600 font-bold"
-                        >
-                          ×
-                        </button>
-                      )}
+                      {skill.name}
+                      <span className="text-xs text-white/50 border border-white/20 rounded-full px-2 py-0.5">{skill.level}</span>
+                      <button
+                        onClick={() => removeSkill(skill.name)}
+                        className="text-white/40 hover:text-red-400 font-bold transition"
+                      >
+                        ×
+                      </button>
                     </span>
                   ))}
                 </div>
 
-                {editMode && (
-                  <div className="flex flex-col sm:flex-row gap-3 mt-4">
-                    <input
-                      value={newSkill}
-                      onChange={(e) => setNewSkill(e.target.value)}
-                      placeholder="Nouvelle compétence"
-                      className="flex-1 border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
-                    />
-
-                    <button
-                      onClick={addSkill}
-                      className="bg-[#1800AD] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
-                    >
-                      Ajouter
-                    </button>
-                  </div>
-                )}
+                <div className="flex flex-wrap gap-3 mt-4 w-fit">
+                  <input
+                    value={newSkill.name}
+                    onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
+                    onKeyDown={(e) => e.key === "Enter" && addSkill()}
+                    placeholder="Nouvelle compétence..."
+                    className="bg-white/10 border border-white/30 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#a594ff] text-white placeholder-white/40 w-44"
+                  />
+                  <select
+                    value={newSkill.level}
+                    onChange={(e) => setNewSkill({ ...newSkill, level: e.target.value })}
+                    className="bg-white/10 border border-white/30 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-[#a594ff] text-white"
+                  >
+                    <option value="BEGINNER" className="text-black">Débutant</option>
+                    <option value="INTERMEDIATE" className="text-black">Intermédiaire</option>
+                    <option value="ADVANCED" className="text-black">Avancé</option>
+                    <option value="EXPERT" className="text-black">Expert</option>
+                  </select>
+                  <button
+                    onClick={addSkill}
+                    className="bg-white/15 border border-white/30 text-white text-sm px-4 py-1.5 rounded-lg font-semibold hover:bg-white/25 transition"
+                  >
+                    + Ajouter
+                  </button>
+                </div>
               </div>
 
               <div className="mt-8">
-                <h3 className="font-bold text-xl mb-3 text-[#1800AD]">
+                <h3 className="font-bold text-xl mb-3 text-[#a594ff]">
                   Disponibilités
                 </h3>
 
@@ -371,28 +389,36 @@ function ProfilContent() {
                   {profile.availability.map((slot) => (
                     <div
                       key={`${slot.day}-${slot.hour}`}
-                      className={`rounded-2xl p-4 border ${
+                      className={`relative rounded-2xl p-4 backdrop-blur-[4px] border ${
                         slot.available
-                          ? "border-green-500 bg-green-50"
-                          : "border-gray-100 bg-[#F6F7FB]"
+                          ? "border-green-400/50 bg-green-500/15"
+                          : "border-white/15 bg-white/5"
                       }`}
                     >
-                      <p className="font-bold text-[#1800AD]">{slot.day}</p>
-                      <p>{slot.hour}</p>
-
-                      <p
-                        className={`text-sm mt-2 ${
-                          slot.available ? "text-green-700" : "text-gray-500"
-                        }`}
+                      <button
+                        onClick={() =>
+                          setProfiles((current) =>
+                            current.map((item) =>
+                              item.slug === profile.slug
+                                ? { ...item, availability: item.availability.filter((s) => s.day !== slot.day || s.hour !== slot.hour) }
+                                : item
+                            )
+                          )
+                        }
+                        className="absolute top-2 right-3 text-white/30 hover:text-red-400 font-bold text-lg transition"
                       >
+                        ×
+                      </button>
+                      <p className="font-bold text-[#a594ff]">{slot.day}</p>
+                      <p className="text-white/80">{slot.hour}</p>
+                      <p className={`text-sm mt-2 ${slot.available ? "text-green-400" : "text-white/40"}`}>
                         {slot.available ? "Disponible" : "Occupé"}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                {editMode && (
-                  <div className="grid md:grid-cols-4 gap-3 mt-4">
+                <div className="flex flex-wrap gap-3 mt-4 w-fit">
                     <input
                       value={newAvailability.day}
                       onChange={(e) =>
@@ -402,7 +428,7 @@ function ProfilContent() {
                         })
                       }
                       placeholder="Jour"
-                      className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                      className="w-24 bg-white/10 border border-white/30 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#a594ff] text-white placeholder-white/50"
                     />
 
                     <input
@@ -414,7 +440,7 @@ function ProfilContent() {
                         })
                       }
                       placeholder="Horaire"
-                      className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                      className="w-28 bg-white/10 border border-white/30 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#a594ff] text-white placeholder-white/50"
                     />
 
                     <select
@@ -425,33 +451,32 @@ function ProfilContent() {
                           available: e.target.value === "true",
                         })
                       }
-                      className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                      className="bg-white/10 border border-white/30 rounded-lg px-4 py-2 text-sm outline-none focus:border-[#a594ff] text-white"
                     >
-                      <option value="true">Disponible</option>
-                      <option value="false">Occupé</option>
+                      <option value="true" className="text-black">Disponible</option>
+                      <option value="false" className="text-black">Occupé</option>
                     </select>
 
                     <button
                       onClick={addAvailability}
-                      className="bg-[#1800AD] text-white rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+                      className="bg-white/15 border border-white/30 text-white text-sm px-5 py-2 rounded-lg font-semibold hover:bg-white/25 transition"
                     >
                       Ajouter
                     </button>
                   </div>
-                )}
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 mt-10">
                 <Link
                   href="/sessions"
-                  className="bg-[#1800AD] text-white text-center px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+                  className="backdrop-blur-[4px] bg-white/25 border border-white/40 text-white text-center px-6 py-3 rounded-xl font-semibold hover:bg-white/35 transition"
                 >
                   Planifier une session
                 </Link>
 
                 <Link
                   href="/feed"
-                  className="border border-[#1800AD] text-[#1800AD] text-center px-6 py-3 rounded-xl font-semibold hover:bg-[#1800AD] hover:text-white transition"
+                  className="backdrop-blur-[4px] bg-black/20 border border-white/25 text-white/80 text-center px-6 py-3 rounded-xl font-semibold hover:bg-black/30 hover:text-white transition"
                 >
                   Voir les feedbacks
                 </Link>

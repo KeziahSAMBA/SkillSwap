@@ -43,7 +43,7 @@ const users = [
 
 export default function MatchsPage() {
   return (
-    <main className="min-h-screen bg-white text-black">
+    <main className="min-h-screen bg-white text-black pt-30">
       <Header />
 
       <section className="max-w-7xl mx-auto px-5 py-10">

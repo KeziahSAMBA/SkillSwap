@@ -39,7 +39,7 @@ const rights = [
 
 export default function RGPDPage() {
   return (
-    <main className="min-h-screen bg-[#F6F7FB] text-[#4A4A4A]">
+    <main className="min-h-screen bg-[#F6F7FB] text-[#4A4A4A] pt-30">
       <Header />
 
       <section className="max-w-6xl mx-auto px-5 py-12">

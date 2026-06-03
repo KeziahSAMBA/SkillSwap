@@ -2,6 +2,19 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
+import { FaHandshake } from "react-icons/fa";
+
+const BG_OVERLAY = "bg-black/60";
+const BG_BLUR = "backdrop-blur-[2px]";
+
+function SectionBg({ src, position = "center" }: { src: string; position?: string }) {
+  return (
+    <>
+      <div className="absolute inset-0" style={{ backgroundImage: `url('${src}')`, backgroundSize: "cover", backgroundPosition: position }} />
+      <div className={`absolute inset-0 ${BG_OVERLAY} ${BG_BLUR}`} />
+    </>
+  );
+}
 
 const steps = [
   {
@@ -66,26 +79,28 @@ const skills = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#F6F7FB] text-[#4A4A4A]">
+    <main className="min-h-screen bg-[#1800AD] text-white">
+      <div className="min-h-screen bg-black/50">
       <Header />
 
       {/* HERO */}
-      <section className="min-h-[78vh] flex items-center">
-        <div className="max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="min-h-screen flex items-center relative pt-30 overflow-hidden">
+        <SectionBg src="/students.jpg" position="top" />
+        <div className="relative z-10 max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center">
           <div className="mt-10">
-            <span className="inline-block bg-[#1800AD]/10 text-[#1800AD] font-bold px-4 py-2 text-sm rounded-full mb-6">
+            <span className="inline-block backdrop-blur-[1px] bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full mb-6">
               Plateforme étudiante collaborative
             </span>
 
-            <h1 className="text-4xl md:text-5xl font-black leading-tight text-[#1800AD]">
+            <h1 className="text-4xl md:text-5xl font-black leading-tight text-white">
               Apprendre.
               <br />
-              <span className="text-[#4D3AFF]">Partager.</span>
+              <span className="text-[#a594ff]">Partager.</span>
               <br />
               Évoluer.
             </h1>
 
-            <p className="mt-6 text-lg leading-relaxed max-w-xl">
+            <p className="mt-6 text-lg leading-relaxed max-w-xl text-white/75">
               SkillSwap connecte les étudiants grâce à leurs compétences.
               Apprenez, partagez et progressez ensemble dans une communauté de
               confiance.
@@ -94,7 +109,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Link
                 href="/register"
-                className="bg-[#1800AD] text-white font-bold px-6 py-3 rounded-xl text-center shadow-md hover:bg-[#4D3AFF] transition"
+                className="backdrop-blur-[1px] bg-white/10 border border-white/30 text-white font-bold px-6 py-3 rounded-xl text-center hover:bg-white/30 transition"
               >
                 Commencer
               </Link>
@@ -105,39 +120,35 @@ export default function Home() {
                 {["TC", "SA", "ES", "KM"].map((avatar) => (
                   <div
                     key={avatar}
-                    className="w-10 h-10 rounded-full bg-[#4D3AFF] text-white border-4 border-white flex items-center justify-center text-sm font-bold"
+                    className="w-10 h-10 rounded-full bg-[#4D3AFF]/70 backdrop-blur-[4px] text-white border-2 border-white/30 flex items-center justify-center text-sm font-bold"
                   >
                     {avatar}
                   </div>
                 ))}
               </div>
-
-              <p className="ml-5 text-base">
-                <span className="text-[#1800AD] font-bold">+2500</span>{" "}
+              <p className="ml-5 text-base text-white/80">
+                <span className="text-white font-bold">+2500</span>{" "}
                 étudiants actifs
               </p>
             </div>
           </div>
 
           <div className="relative">
-            <div className="absolute -right-3 -top-4 bg-white rounded-2xl shadow-lg px-5 py-3 flex items-center gap-3">
+            <div className="absolute -right-3 -top-4 z-10 bg-white rounded-2xl shadow-lg px-5 py-3 flex items-center gap-3">
               <span className="w-9 h-9 rounded-full bg-green-500 text-white flex items-center justify-center">
                 ✓
               </span>
-              <p className="font-bold">Match trouvé !</p>
+              <p className="font-bold text-gray-800">Match trouvé !</p>
             </div>
 
-            <div className="bg-white rounded-3xl shadow-lg p-6">
+            <div className="backdrop-blur-[4px] bg-white/10 border border-white/20 rounded-3xl shadow-lg p-6">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-[#1800AD] text-white flex items-center justify-center text-2xl">
-                  👥
+                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-[2px] border border-white/20 text-white flex items-center justify-center text-2xl">
+                  <FaHandshake />
                 </div>
-
                 <div>
-                  <h2 className="text-2xl font-bold text-[#1800AD]">
-                    Collaboration
-                  </h2>
-                  <p className="text-base">Échange de compétences</p>
+                  <h2 className="text-2xl font-bold text-white">Collaboration</h2>
+                  <p className="text-base text-white/70">Échange de compétences</p>
                 </div>
               </div>
 
@@ -150,79 +161,76 @@ export default function Home() {
                 ].map(([value, label]) => (
                   <div
                     key={label}
-                    className="bg-[#F6F7FB] rounded-2xl p-4 text-center"
+                    className="backdrop-blur-[2px] bg-black/20 border border-white/15 rounded-2xl p-4 text-center"
                   >
-                    <p className="text-2xl font-bold text-[#1800AD]">
-                      {value}
-                    </p>
-                    <p className="text-sm mt-1">{label}</p>
+                    <p className="text-2xl font-bold text-white">{value}</p>
+                    <p className="text-sm mt-1 text-white/60">{label}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="absolute -left-3 bottom-[-22px] bg-white shadow-lg rounded-2xl px-5 py-3 flex items-center gap-3">
+            <div className="absolute -left-3 bottom-[-22px] z-10 bg-white shadow-lg rounded-2xl px-5 py-3 flex items-center gap-3">
               <span className="w-9 h-9 rounded-full bg-[#4D3AFF] text-white flex items-center justify-center">
                 🎓
               </span>
-              <p className="font-bold">+50 XP gagnés</p>
+              <p className="font-bold text-gray-800">+50 XP gagnés</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* COMMENT ÇA MARCHE */}
-      <section className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-5">
+      <section className="min-h-screen flex flex-col justify-center py-16 relative overflow-hidden border-t border-white/20">
+        <SectionBg src="/students2.jpg" />
+        <div className="relative z-10 max-w-7xl mx-auto px-5 w-full">
           <div className="text-center mb-12">
-            <span className="inline-block bg-[#1800AD]/10 text-[#1800AD] font-bold px-4 py-2 text-sm rounded-full">
+            <span className="inline-block backdrop-blur-[4px] bg-white/10 border border-white/15 text-white font-bold px-4 py-2 text-sm rounded-full">
               Simple et efficace
             </span>
-
-            <h2 className="text-3xl md:text-4xl font-black text-[#1800AD] mt-5">
+            <h2 className="text-3xl md:text-4xl font-black mt-5 text-[#a594ff]">
               Comment ça marche ?
             </h2>
-
-            <p className="text-base mt-4 max-w-2xl mx-auto">
+            <p className="text-base mt-4 max-w-2xl mx-auto text-white/70">
               En quelques étapes simples, commencez à échanger vos compétences
               avec d&apos;autres étudiants.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {steps.map((step) => (
-              <div
-                key={step.number}
-                className="relative bg-[#F6F7FB] rounded-3xl p-6 min-h-[260px]"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-[#1800AD] text-white flex items-center justify-center text-xl mb-5">
-                  {step.icon}
+            {steps.map((step, index) => {
+              const images = ["/photo_profil.jpg", "/match.jpg", "/calendar.jpg", "/progresser.jpg"];
+              const titleColors = ["#a594ff", "#a594ff", "#a594ff", "#a594ff"];
+              return (
+                <div
+                  key={step.number}
+                  className="relative rounded-3xl p-6 min-h-65 shadow-lg overflow-hidden border border-white/10 transition hover:scale-[1.02]"
+                  style={{ backgroundImage: `url(${images[index]})`, backgroundSize: "cover", backgroundPosition: "center" }}
+                >
+                  <div className="absolute inset-0 bg-black/65 backdrop-blur-[2px]" />
+                  <div className="relative z-10 h-full flex flex-col justify-between min-h-55">
+                    <p className="text-4xl font-black text-[#4D3AFF] w-fit rounded-lg px-1">{step.number}</p>
+                    <div className="text-center">
+                      <h3 className="text-xl font-bold" style={{ color: titleColors[index] }}>{step.title}</h3>
+                      <p className="text-base mt-2 leading-relaxed text-white/90">{step.text}</p>
+                    </div>
+                  </div>
                 </div>
-
-                <p className="text-4xl font-black text-[#4D3AFF]/25">
-                  {step.number}
-                </p>
-
-                <h3 className="text-xl font-bold text-[#1800AD] mt-4">
-                  {step.title}
-                </h3>
-
-                <p className="text-base mt-3 leading-relaxed">{step.text}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* AVANTAGES */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-5">
+      <section className="min-h-screen flex flex-col justify-center py-16 relative overflow-hidden border-t border-blue-700/70">
+        <SectionBg src="/students3.jpg" />
+        <div className="relative z-10 max-w-7xl mx-auto px-5 w-full">
           <div className="text-center mb-12">
-            <span className="inline-block bg-[#1800AD]/10 text-[#1800AD] font-bold px-4 py-2 text-sm rounded-full">
+            <span className="inline-block backdrop-blur-[4px] bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
               Pourquoi nous choisir
             </span>
-
-            <h2 className="text-3xl md:text-4xl font-black text-[#1800AD] mt-5">
+            <h2 className="text-3xl md:text-4xl font-black text-[#a594ff] mt-5">
               Les avantages SkillSwap
             </h2>
           </div>
@@ -231,99 +239,97 @@ export default function Home() {
             {advantages.map((item) => (
               <div
                 key={item.title}
-                className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition"
+                className="backdrop-blur-[8px] bg-white/10 border border-white/20 rounded-3xl p-6 shadow-lg hover:bg-white/15 transition"
               >
-                <div className="w-14 h-14 rounded-2xl bg-[#F6F7FB] text-[#1800AD] flex items-center justify-center text-2xl mb-6">
+                <div className="w-14 h-14 rounded-2xl bg-black/20 border border-white/15 text-white flex items-center justify-center text-2xl mb-6">
                   {item.icon}
                 </div>
-
-                <h3 className="text-xl font-bold text-[#1800AD]">
-                  {item.title}
-                </h3>
-
-                <p className="text-base mt-4 leading-relaxed">{item.text}</p>
+                <h3 className="text-xl font-bold text-[#a594ff]">{item.title}</h3>
+                <p className="text-base mt-4 leading-relaxed text-white/70">{item.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* CTA + COMPÉTENCES — image commune */}
+      <div className="relative overflow-hidden border-t border-white/20">
+        <SectionBg src="/students4.jpg" />
+
       {/* CTA */}
-      <section className="bg-[#1800AD] text-white py-16 text-center">
-        <div className="max-w-5xl mx-auto px-5">
-          <h2 className="text-3xl md:text-4xl font-black">
-            Prêt à rejoindre la communauté ?
-          </h2>
-
-          <p className="text-lg mt-5 text-white/80">
-            Inscrivez-vous gratuitement et commencez à échanger vos compétences
-            dès aujourd&apos;hui.
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-            <Link
-              href="/register"
-              className="bg-white text-[#1800AD] font-bold px-7 py-3 rounded-xl"
-            >
-              Créer un compte gratuit
-            </Link>
-
-            <Link
-              href="/login"
-              className="border-2 border-white text-white font-bold px-7 py-3 rounded-xl"
-            >
-              J&apos;ai déjà un compte
-            </Link>
+      <section className="min-h-[50vh] flex flex-col justify-center py-8 text-center relative">
+        <div className="relative z-10 max-w-5xl mx-auto px-5 w-full">
+          <div className="backdrop-blur-[8px] bg-white/10 border border-white/20 rounded-3xl p-10 shadow-lg">
+            <h2 className="text-3xl md:text-4xl font-black text-[#a594ff]">
+              Prêt à rejoindre la communauté ?
+            </h2>
+            <p className="text-lg mt-5 text-white/75">
+              Inscrivez-vous gratuitement et commencez à échanger vos compétences
+              dès aujourd&apos;hui.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+              <Link
+                href="/register"
+                className="backdrop-blur-[4px] bg-white/25 border border-white/40 text-white font-bold px-7 py-3 rounded-xl hover:bg-white/35 transition"
+              >
+                Créer un compte gratuit
+              </Link>
+              <Link
+                href="/login"
+                className="backdrop-blur-[4px] bg-black/20 border border-white/25 text-white/80 font-bold px-7 py-3 rounded-xl hover:bg-black/30 hover:text-white transition"
+              >
+                J&apos;ai déjà un compte
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* COMPÉTENCES */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-5 text-center">
-          <span className="inline-block bg-[#1800AD]/10 text-[#1800AD] font-bold px-4 py-2 text-sm rounded-full">
+      <section className="min-h-[50vh] flex flex-col justify-center py-8 relative">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 w-full text-center">
+          <span className="inline-block backdrop-blur-[4px] bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
             Découvrez
           </span>
-
-          <h2 className="text-3xl md:text-4xl font-black text-[#1800AD] mt-5">
+          <h2 className="text-3xl md:text-4xl font-black text-[#a594ff] mt-5">
             Exemples de compétences
           </h2>
-
-          <p className="text-base mt-4">
+          <p className="text-base mt-4 text-white/70">
             Dev, Design, Langues, Marketing... Trouvez ou partagez toutes les
             compétences imaginables.
           </p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
             {skills.map((skill) => (
-              <Link
-                href="/matchs"
+              <div
+                
                 key={skill.name}
-                className="bg-white border border-gray-200 rounded-full px-5 py-3 flex items-center justify-between hover:border-[#1800AD] transition"
+                className="backdrop-blur-[8px] bg-white/10 border border-white/20 rounded-full px-5 py-3 flex items-center justify-between hover:bg-white/20 transition"
               >
-                <span className="flex items-center gap-3 text-base font-semibold">
+                <span className="flex items-center gap-3 text-base font-semibold text-white">
                   <span>{skill.icon}</span>
                   {skill.name}
                 </span>
-
-                <span className="bg-[#F6F7FB] px-3 py-1 rounded-full text-sm">
+                <span className="backdrop-blur-[4px] bg-black/20 border border-white/15 px-3 py-1 rounded-full text-sm text-white/70">
                   {skill.tag}
                 </span>
-              </Link>
+              </div>
             ))}
           </div>
 
           <Link
             href="/login"
-            className="inline-block text-[#1800AD] font-bold text-lg mt-10"
+            className="inline-block text-white/80 hover:text-white font-bold text-lg mt-10 transition"
           >
             Voir toutes les compétences →
           </Link>
         </div>
       </section>
+      </div>{/* fin wrapper CTA + COMPÉTENCES */}
 
       <CookieBanner />
       <Footer />
+      </div>
     </main>
   );
 }

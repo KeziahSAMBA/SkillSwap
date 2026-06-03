@@ -47,7 +47,12 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-[#F6F7FB] flex items-center justify-center px-5 py-10">
       <div className="bg-white border border-[#E8E9F5] rounded-3xl p-8 w-full max-w-md shadow-sm">
-        <img src="/logo-6you.jpeg" className="h-12 mb-8" alt="SkillSwap" />
+        <div className="flex items-center justify-between mb-8">
+          <img src="/logo-6you.jpeg" className="h-12" alt="SkillSwap" />
+          <Link href="/" className="text-sm font-semibold text-[#1800AD] hover:text-[#4D3AFF] transition">
+            ← Retour
+          </Link>
+        </div>
 
         <p className="text-[#1800AD] font-bold mb-2">Bienvenue sur SkillSwap</p>
         <h1 className="text-3xl font-bold text-[#1800AD]">Connexion</h1>
