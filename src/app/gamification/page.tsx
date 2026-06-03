@@ -30,6 +30,16 @@ export default function GamificationPage() {
           Points, badges, défis et niveau de progression.
         </p>
 
+        <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
+          Progresse et sois valorisé
+        </h1>
+
+        <p className="mt-3">
+          Gagne des points, débloque des badges et relève des défis pour
+          développer ton profil.
+        </p>
+
+        {/* STATS */}
         <div className="grid md:grid-cols-4 gap-6 mt-10">
           {[
             ["680", "XP"],
@@ -47,6 +57,7 @@ export default function GamificationPage() {
           ))}
         </div>
 
+        {/* BADGES + DEFIS */}
         <div className="grid lg:grid-cols-2 gap-8 mt-10">
           <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
             <h2 className="text-2xl font-bold mb-5 text-[#1800AD]">

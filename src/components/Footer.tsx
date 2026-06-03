@@ -15,6 +15,17 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-10">
           {/* LOGO */}
           <div>
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#1800AD] font-black text-2xl">
+               <Link href="/" className="flex items-center gap-3">
+                <img src="/logo-6you.jpeg" alt="SkillSwap" className="h-10 w-auto" />
+              </Link>
+              </div>
+
+              <div>
+                <h2 className="text-3xl font-bold">SkillSwap</h2>
+              </div>
+            </div>
             <img src="/logo-6you.jpeg" alt="SkillSwap"  className="h-12 mb-4 bg-white rounded-lg p-1"  />
 
             <p className="text-white/80 text-sm leading-relaxed">
@@ -54,38 +65,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* PRODUIT */}
-          <div>
-            <h4 className="font-bold text-lg mb-4">
-              Navigation
-            </h4>
-
-            <div className="space-y-3 text-white/80">
-
-              <Link href="/matchs" className="block hover:text-white">
-                Matching
-              </Link>
-
-               <Link href="/profil" className="block hover:text-white">
-                Profil
-              </Link>
-
-              <Link href="/sessions" className="block hover:text-white">
-                Sessions
-              </Link>
-
-               <Link href="/feed" className="block hover:text-white">
-                Feed social
-              </Link>
-
-              <Link href="/messages" className="block hover:text-white">
-                Messagerie
-              </Link>
-
-              <Link href="/gamification" className="block hover:text-white">
-                Gamification
-              </Link>
-            </div>
+         
           </div>
 
           {/* COMPTE */}

@@ -13,7 +13,7 @@ const steps = [
     icon: "👥",
     number: "02",
     title: "Trouvez un match",
-    text: "Découvrez les étudiants compatibles avec vos objectifs d’apprentissage.",
+    text: "Découvrez les étudiants compatibles avec vos objectifs d'apprentissage.",
   },
   {
     icon: "📅",
@@ -92,12 +92,11 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Link
-                href="/"
+                href="/register"
                 className="bg-[#1800AD] text-white font-bold px-6 py-3 rounded-xl text-center shadow-md hover:bg-[#4D3AFF] transition"
               >
-                Commencer 
+                Commencer
               </Link>
-
             </div>
 
             <div className="flex items-center mt-8">
@@ -185,7 +184,7 @@ export default function Home() {
 
             <p className="text-base mt-4 max-w-2xl mx-auto">
               En quelques étapes simples, commencez à échanger vos compétences
-              avec d’autres étudiants.
+              avec d&apos;autres étudiants.
             </p>
           </div>
 
@@ -257,22 +256,22 @@ export default function Home() {
 
           <p className="text-lg mt-5 text-white/80">
             Inscrivez-vous gratuitement et commencez à échanger vos compétences
-            dès aujourd’hui.
+            dès aujourd&apos;hui.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
             <Link
-              href="/"
+              href="/register"
               className="bg-white text-[#1800AD] font-bold px-7 py-3 rounded-xl"
             >
               Créer un compte gratuit
             </Link>
 
             <Link
-              href="/"
+              href="/login"
               className="border-2 border-white text-white font-bold px-7 py-3 rounded-xl"
             >
-              J’ai déjà un compte
+              J&apos;ai déjà un compte
             </Link>
           </div>
         </div>
@@ -314,7 +313,7 @@ export default function Home() {
           </div>
 
           <Link
-            href="/"
+            href="/login"
             className="inline-block text-[#1800AD] font-bold text-lg mt-10"
           >
             Voir toutes les compétences →

@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
       id: true,
       name: true,
       email: true,
+      bio: true,
       skills: { include: { skill: true } },
       availabilities: true,
     },
@@ -43,12 +44,15 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ message: "Non autorisé." }, { status: 401 });
   }
 
-  const { name } = await req.json();
+  const { name, bio } = await req.json();
 
   const user = await prisma.user.update({
     where: { id: userId },
-    data: { ...(name && { name }) },
-    select: { id: true, name: true, email: true },
+    data: {
+      ...(name && { name }),
+      ...(bio !== undefined && { bio }),
+    },
+    select: { id: true, name: true, email: true, bio: true },
   });
 
   return NextResponse.json(user);
