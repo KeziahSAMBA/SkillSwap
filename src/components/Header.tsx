@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type User = {
@@ -11,10 +11,7 @@ type User = {
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const pathname = usePathname();
   const router = useRouter();
-  const isHomepage = pathname === "/";
-  const showNav = user || !isHomepage;
 
   useEffect(() => {
     const readUser = () => {
@@ -66,7 +63,7 @@ export default function Header() {
           <img src="/logo-6you.jpeg" alt="SkillSwap" className="h-10 w-auto" />
         </Link>
 
-        {showNav && (
+        {user && (
           <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-[#4A4A4A]">
             {links.map((link) => (
               <Link
@@ -81,7 +78,7 @@ export default function Header() {
         )}
 
         <div className="hidden md:flex items-center gap-4">
-          {showNav && (
+          {user && (
             <Link
               href="/feed"
               className="relative text-xl text-[#1800AD] hover:text-[#4D3AFF] transition"
@@ -126,7 +123,7 @@ export default function Header() {
           )}
         </div>
 
-        {showNav && (
+        {user && (
           <button
             onClick={() => setOpen(!open)}
             className="lg:hidden text-3xl text-[#1800AD]"
@@ -136,7 +133,7 @@ export default function Header() {
         )}
       </div>
 
-      {open && showNav && (
+      {open && user && (
         <div className="lg:hidden px-5 pb-5 flex flex-col gap-4 bg-white border-t border-[#E8E9F5]">
           {links.map((link) => (
             <Link

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CookieBanner from "@/components/CookieBanner";
 
 const steps = [
   {
@@ -321,6 +322,7 @@ export default function Home() {
         </div>
       </section>
 
+      <CookieBanner />
       <Footer />
     </main>
   );

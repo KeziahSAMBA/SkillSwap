@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import CookieBanner from "@/components/CookieBanner";
 
 const sections = [
   {
@@ -155,8 +154,6 @@ export default function RGPDPage() {
           </aside>
         </div>
       </section>
-
-      <CookieBanner />
 
       <Footer />
     </main>

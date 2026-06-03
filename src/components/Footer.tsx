@@ -1,12 +1,6 @@
 import Link from "next/link";
 
-import {
-  FaLinkedin,
-  FaInstagram,
-  FaYoutube,
-  FaGithub,
-} from "react-icons/fa";
-
+import { FaLinkedin, FaInstagram, FaYoutube, FaGithub } from "react-icons/fa6";
 
 export default function Footer() {
   return (
@@ -17,16 +11,19 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-4 mb-5">
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#1800AD] font-black text-2xl">
-               <Link href="/" className="flex items-center gap-3">
-                <img src="/logo-6you.jpeg" alt="SkillSwap" className="h-10 w-auto" />
-              </Link>
+                <Link href="/" className="flex items-center gap-3">
+                  <img
+                    src="/logo-6you.jpeg"
+                    alt="SkillSwap"
+                    className="h-10 w-auto"
+                  />
+                </Link>
               </div>
 
               <div>
                 <h2 className="text-3xl font-bold">SkillSwap</h2>
               </div>
             </div>
-            <img src="/logo-6you.jpeg" alt="SkillSwap"  className="h-12 mb-4 bg-white rounded-lg p-1"  />
 
             <p className="text-white/80 text-sm leading-relaxed">
               SkillSwap connecte les étudiants afin d’échanger leurs
@@ -65,39 +62,9 @@ export default function Footer() {
             </div>
           </div>
 
-         
-          </div>
-
-          {/* COMPTE */}
-          <div>
-            <h4 className="font-bold text-lg mb-4">
-              Compte
-            </h4>
-
-            <div className="space-y-3 text-white/80">
-              <Link href="/profil" className="block hover:text-white">
-                Mon profil
-              </Link>
-
-              <Link href="/feed" className="block hover:text-white">
-                Feed social
-              </Link>
-
-              <Link href="/contact" className="block hover:text-white">
-                Support
-              </Link>
-
-              <Link href="/login" className="block hover:text-white">
-                Connexion
-              </Link>
-            </div>
-          </div>
-
           {/* INFORMATIONS */}
-          <div>
-            <h4 className="font-bold text-lg mb-4">
-              Informations
-            </h4>
+          <div className="md:col-start-4">
+            <h4 className="font-bold text-lg mb-4">Informations</h4>
 
             <div className="space-y-3 text-white/80">
               <Link href="/a-propos" className="block hover:text-white">
