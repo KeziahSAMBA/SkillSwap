@@ -1,926 +1,566 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
-type AuthUser = {
-  id?: string;
-  name?: string;
-  email?: string;
-  bio?: string;
-  skills?: {
-    id: string;
-    name?: string;
-    skill?: { name: string };
-    type: string;
-    level: string;
-  }[];
-  availabilities?: {
-    id: string;
-    day?: string;
-    dayOfWeek?: number;
-    startTime: string;
-    endTime: string;
-  }[];
+type Availability = {
+  day: string;
+  hour: string;
+  available: boolean;
 };
 
-type PublicUser = {
-  id: string;
+type Profile = {
+  slug: string;
+  initials: string;
   name: string;
-  skills: {
-    id: string;
-    skill: { name: string };
-    type: string;
-    level: string;
-  }[];
-  availabilities: {
-    id: string;
-    dayOfWeek: number;
-    startTime: string;
-    endTime: string;
-  }[];
-  badges: { id: string; badge: { name: string } }[];
-  feedbacksRecv: {
-    rating: number;
-    comment?: string | null;
-    giver: { name: string };
-  }[];
+  role: string;
+  score: number;
+  rating: number;
+  sessions: number;
+  xp: number;
+  color: string;
+  presence: string;
+  lastSeen: string;
+  skills: string[];
+  bio: string;
+  availability: Availability[];
 };
 
-type SkillOption = { id: string; name: string; category?: string | null };
-type UserSkillItem = {
-  id: string;
-  name?: string;
-  skill?: { name: string };
-  type: string;
-  level: string;
-};
-type AvailabilityItem = {
-  id: string;
-  day?: string;
-  dayOfWeek?: number;
-  startTime: string;
-  endTime: string;
-};
-
-const DAYS = [
-  "Lundi",
-  "Mardi",
-  "Mercredi",
-  "Jeudi",
-  "Vendredi",
-  "Samedi",
-  "Dimanche",
+const initialProfiles: Profile[] = [
+  {
+    slug: "tom",
+    initials: "TC",
+    name: "Tom Couture",
+    role: "Développement Web",
+    score: 96,
+    rating: 5,
+    sessions: 23,
+    xp: 680,
+    color: "bg-[#1800AD]",
+    presence: "online",
+    lastSeen: "En ligne maintenant",
+    skills: ["React.js", "Node.js", "Next.js"],
+    bio: "Passionné de front-end, j’aide les étudiants à progresser sur React, Next.js et Node.js.",
+    availability: [
+      { day: "Lundi", hour: "14h - 15h", available: true },
+      { day: "Mercredi", hour: "18h - 19h", available: true },
+      { day: "Vendredi", hour: "10h - 11h", available: false },
+    ],
+  },
+  {
+    slug: "sarah",
+    initials: "SA",
+    name: "Sarah Benali",
+    role: "E-business",
+    score: 89,
+    rating: 4,
+    sessions: 11,
+    xp: 420,
+    color: "bg-[#4D3AFF]",
+    presence: "away",
+    lastSeen: "Vue il y a 12 min",
+    skills: ["SEO", "Canva", "Marketing"],
+    bio: "Spécialisée en marketing digital, SEO et création de contenus visuels.",
+    availability: [
+      { day: "Mardi", hour: "12h - 13h", available: true },
+      { day: "Jeudi", hour: "16h - 17h", available: false },
+    ],
+  },
 ];
-const LEVELS: Record<string, string> = {
-  BEGINNER: "Débutant",
-  INTERMEDIATE: "Intermédiaire",
-  ADVANCED: "Avancé",
-  EXPERT: "Expert",
-};
 
-function renderStars(rating: number) {
+function stars(rating: number) {
   return "★".repeat(rating) + "☆".repeat(5 - rating);
 }
 
-function PublicProfilView({ userId }: { userId: string }) {
-  const [profile, setProfile] = useState<PublicUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-
-  useEffect(() => {
-    fetch(`/api/v1/users/${userId}`)
-      .then((r) => {
-        if (r.status === 404) {
-          setNotFound(true);
-          return null;
-        }
-        return r.json();
-      })
-      .then((data) => {
-        if (data) setProfile(data);
-      })
-      .catch(() => setNotFound(true))
-      .finally(() => setLoading(false));
-  }, [userId]);
-
-  const initials =
-    profile?.name
-      ?.split(" ")
-      .map((p) => p[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase() ?? "?";
-
-  const teachSkills = profile?.skills.filter((s) => s.type === "TEACH") ?? [];
-  const learnSkills = profile?.skills.filter((s) => s.type === "LEARN") ?? [];
-
-  return (
-    <main className="min-h-screen bg-white text-black">
-      <Header />
-
-      <section className="max-w-7xl mx-auto px-5 py-10">
-        <Link href="/matchs" className="text-sm hover:text-[#DFB626]">
-          ← Retour aux matchs
-        </Link>
-
-        {loading && (
-          <div className="flex justify-center mt-20">
-            <p className="text-gray-500">Chargement du profil…</p>
-          </div>
-        )}
-
-        {!loading && notFound && (
-          <div className="flex flex-col items-center justify-center mt-20 gap-4">
-            <p className="text-5xl">🙈</p>
-            <p className="text-2xl font-bold">Profil introuvable</p>
-            <p className="text-gray-500">
-              Ce profil n&apos;existe pas ou a été supprimé.
-            </p>
-            <Link
-              href="/matchs"
-              className="bg-black text-white px-6 py-3 rounded-xl hover:bg-[#DFB626] hover:text-black transition"
-            >
-              Voir les matchs
-            </Link>
-          </div>
-        )}
-
-        {!loading && profile && (
-          <div className="grid lg:grid-cols-[320px_1fr] gap-10 mt-8">
-            <aside className="border border-gray-200 rounded-3xl p-6 h-fit">
-              <div className="w-32 h-32 bg-[#DFB626] rounded-full flex items-center justify-center text-5xl font-bold mx-auto">
-                {initials}
-              </div>
-
-              <h1 className="text-2xl font-bold text-center mt-5">
-                {profile.name}
-              </h1>
-
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <div className="bg-[#F5F5F5] rounded-2xl p-4 text-center">
-                  <p className="text-xl font-bold">{teachSkills.length}</p>
-                  <p className="text-sm">Enseigne</p>
-                </div>
-                <div className="bg-[#F5F5F5] rounded-2xl p-4 text-center">
-                  <p className="text-xl font-bold">{learnSkills.length}</p>
-                  <p className="text-sm">Apprend</p>
-                </div>
-                <div className="bg-[#F5F5F5] rounded-2xl p-4 text-center">
-                  <p className="text-xl font-bold">
-                    {profile.availabilities.length}
-                  </p>
-                  <p className="text-sm">Dispos</p>
-                </div>
-                <div className="bg-[#DFB626] rounded-2xl p-4 text-center">
-                  <p className="text-xl font-bold">{profile.badges.length}</p>
-                  <p className="text-sm">Badges</p>
-                </div>
-              </div>
-
-              <button className="w-full bg-black text-white py-4 rounded-xl mt-6 hover:bg-[#DFB626] hover:text-black transition">
-                Matcher
-              </button>
-              <button className="w-full border border-black py-4 rounded-xl mt-3 hover:bg-black hover:text-white transition">
-                Envoyer un message
-              </button>
-            </aside>
-
-            <section className="space-y-8">
-              <div className="border border-gray-200 rounded-3xl p-8">
-                <p className="text-[#DFB626] font-bold mb-2">Profil étudiant</p>
-                <h2 className="text-4xl font-serif font-bold">
-                  {profile.name}
-                </h2>
-              </div>
-
-              <div className="grid lg:grid-cols-2 gap-8">
-                <div className="border border-gray-200 rounded-3xl p-8">
-                  <h3 className="font-bold text-xl mb-4">J&apos;enseigne</h3>
-                  {teachSkills.length === 0 ? (
-                    <p className="text-gray-400 text-sm">
-                      Aucune compétence à enseigner renseignée.
-                    </p>
-                  ) : (
-                    <div className="space-y-3">
-                      {teachSkills.map((s) => (
-                        <div
-                          key={s.id}
-                          className="flex justify-between items-center bg-[#F5F5F5] rounded-2xl px-4 py-3"
-                        >
-                          <span>{s.skill.name}</span>
-                          <span className="bg-[#DFB626] px-3 py-1 rounded-full text-sm">
-                            {LEVELS[s.level] ?? s.level}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="border border-gray-200 rounded-3xl p-8">
-                  <h3 className="font-bold text-xl mb-4">J&apos;apprends</h3>
-                  {learnSkills.length === 0 ? (
-                    <p className="text-gray-400 text-sm">
-                      Aucune compétence à apprendre renseignée.
-                    </p>
-                  ) : (
-                    <div className="flex flex-wrap gap-3">
-                      {learnSkills.map((s) => (
-                        <span
-                          key={s.id}
-                          className="bg-[#F5F5F5] px-4 py-2 rounded-full"
-                        >
-                          {s.skill.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="border border-gray-200 rounded-3xl p-8">
-                <h3 className="font-bold text-xl mb-4">Disponibilités</h3>
-                {profile.availabilities.length === 0 ? (
-                  <p className="text-gray-400 text-sm">
-                    Aucune disponibilité renseignée.
-                  </p>
-                ) : (
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {profile.availabilities.map((slot) => (
-                      <div
-                        key={slot.id}
-                        className="rounded-2xl p-4 border border-green-500 bg-green-50"
-                      >
-                        <p className="font-bold">
-                          {DAYS[slot.dayOfWeek] ?? `Jour ${slot.dayOfWeek}`}
-                        </p>
-                        <p className="text-gray-600">
-                          {slot.startTime} – {slot.endTime}
-                        </p>
-                        <button className="w-full mt-4 bg-black text-white py-2 rounded-xl hover:bg-[#DFB626] hover:text-black transition">
-                          Réserver
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="border border-gray-200 rounded-3xl p-8">
-                <h3 className="font-bold text-xl mb-4">Badges débloqués</h3>
-                {profile.badges.length === 0 ? (
-                  <p className="text-gray-400 text-sm">
-                    Aucun badge débloqué pour l&apos;instant.
-                  </p>
-                ) : (
-                  <div className="flex flex-wrap gap-3">
-                    {profile.badges.map((b) => (
-                      <span
-                        key={b.id}
-                        className="bg-black text-white px-4 py-2 rounded-full"
-                      >
-                        🏆 {b.badge.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="border border-gray-200 rounded-3xl p-8">
-                <div className="flex justify-between mb-6">
-                  <h3 className="font-bold text-2xl">Avis reçus</h3>
-                  <Link href="/feed" className="hover:text-[#DFB626]">
-                    Voir tout →
-                  </Link>
-                </div>
-                {profile.feedbacksRecv.length === 0 ? (
-                  <p className="text-gray-400 text-sm">
-                    Aucun avis reçu pour l&apos;instant.
-                  </p>
-                ) : (
-                  profile.feedbacksRecv.map((fb, i) => (
-                    <div
-                      key={i}
-                      className="border-b border-gray-100 py-4 flex flex-col sm:flex-row sm:justify-between gap-2"
-                    >
-                      <div>
-                        <p className="text-sm font-medium text-gray-700">
-                          {fb.giver.name}
-                        </p>
-                        {fb.comment && (
-                          <p className="text-gray-600 mt-1">{fb.comment}</p>
-                        )}
-                      </div>
-                      <p className="text-[#DFB626]">{renderStars(fb.rating)}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </section>
-          </div>
-        )}
-      </section>
-
-      <Footer />
-    </main>
-  );
+function presenceColor(presence: string) {
+  if (presence === "online") return "bg-green-500";
+  if (presence === "away") return "bg-yellow-400";
+  return "bg-gray-400";
 }
 
-function AddSkillModal({
-  onClose,
-  onAdded,
-}: {
-  onClose: () => void;
-  onAdded: (skill: UserSkillItem) => void;
-}) {
-  const [skillOptions, setSkillOptions] = useState<SkillOption[]>([]);
-  const [skillId, setSkillId] = useState("");
-  const [skillName, setSkillName] = useState("");
-  const [useCustom, setUseCustom] = useState(false);
-  const [type, setType] = useState<"TEACH" | "LEARN">("TEACH");
-  const [level, setLevel] = useState("BEGINNER");
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch("/api/v1/skills")
-      .then((r) => r.json())
-      .then(setSkillOptions)
-      .catch(() => {});
-  }, []);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    setError("");
-    const token = localStorage.getItem("token");
-    const body = useCustom
-      ? { skillName, type, level }
-      : { skillId, type, level };
-    const res = await fetch("/api/v1/users/me/skills", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
-    setSaving(false);
-    if (res.ok) {
-      onAdded(data);
-      onClose();
-    } else {
-      setError(data.message ?? "Erreur lors de l'ajout.");
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-xl">
-        <h2 className="text-xl font-bold mb-6">Ajouter une compétence</h2>
-
-        {error && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2 mb-4">
-            {error}
-          </p>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex gap-2 mb-2">
-            <button
-              type="button"
-              onClick={() => setUseCustom(false)}
-              className={`flex-1 py-2 rounded-xl border text-sm transition ${!useCustom ? "bg-black text-white border-black" : "border-gray-200 hover:border-black"}`}
-            >
-              Choisir existante
-            </button>
-            <button
-              type="button"
-              onClick={() => setUseCustom(true)}
-              className={`flex-1 py-2 rounded-xl border text-sm transition ${useCustom ? "bg-black text-white border-black" : "border-gray-200 hover:border-black"}`}
-            >
-              Créer nouvelle
-            </button>
-          </div>
-
-          {useCustom ? (
-            <input
-              type="text"
-              required
-              placeholder="Nom de la compétence"
-              value={skillName}
-              onChange={(e) => setSkillName(e.target.value)}
-              className="w-full border rounded-xl px-4 py-3"
-            />
-          ) : (
-            <select
-              required
-              value={skillId}
-              onChange={(e) => setSkillId(e.target.value)}
-              className="w-full border rounded-xl px-4 py-3 bg-white"
-            >
-              <option value="">-- Sélectionner une compétence --</option>
-              {skillOptions.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          )}
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
-                Type
-              </label>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value as "TEACH" | "LEARN")}
-                className="w-full border rounded-xl px-4 py-3 bg-white"
-              >
-                <option value="TEACH">J&apos;enseigne</option>
-                <option value="LEARN">J&apos;apprends</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
-                Niveau
-              </label>
-              <select
-                value={level}
-                onChange={(e) => setLevel(e.target.value)}
-                className="w-full border rounded-xl px-4 py-3 bg-white"
-              >
-                {Object.entries(LEVELS).map(([k, v]) => (
-                  <option key={k} value={k}>
-                    {v}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="flex gap-3 pt-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="flex-1 bg-black text-white py-3 rounded-xl hover:bg-[#DFB626] hover:text-black transition disabled:opacity-60"
-            >
-              {saving ? "Ajout…" : "Ajouter"}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 border border-black py-3 rounded-xl hover:bg-black hover:text-white transition"
-            >
-              Annuler
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
+function makeSlug(name: string) {
+  return name.toLowerCase().trim().replace(/\s+/g, "-");
 }
 
-function AddAvailabilityModal({
-  onClose,
-  onAdded,
-}: {
-  onClose: () => void;
-  onAdded: (a: AvailabilityItem) => void;
-}) {
-  const [dayOfWeek, setDayOfWeek] = useState("0");
-  const [startTime, setStartTime] = useState("09:00");
-  const [endTime, setEndTime] = useState("10:00");
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    setError("");
-    const token = localStorage.getItem("token");
-    const res = await fetch("/api/v1/users/me/availabilities", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        dayOfWeek: Number(dayOfWeek),
-        startTime,
-        endTime,
-      }),
-    });
-    const data = await res.json();
-    setSaving(false);
-    if (res.ok) {
-      onAdded(data);
-      onClose();
-    } else {
-      setError(data.message ?? "Erreur lors de l'ajout.");
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-xl">
-        <h2 className="text-xl font-bold mb-6">Ajouter une disponibilité</h2>
-
-        {error && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2 mb-4">
-            {error}
-          </p>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">
-              Jour
-            </label>
-            <select
-              value={dayOfWeek}
-              onChange={(e) => setDayOfWeek(e.target.value)}
-              className="w-full border rounded-xl px-4 py-3 bg-white"
-            >
-              {DAYS.map((d, i) => (
-                <option key={i} value={i}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
-                Heure de début
-              </label>
-              <input
-                type="time"
-                required
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="w-full border rounded-xl px-4 py-3"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
-                Heure de fin
-              </label>
-              <input
-                type="time"
-                required
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="w-full border rounded-xl px-4 py-3"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-3 pt-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="flex-1 bg-black text-white py-3 rounded-xl hover:bg-[#DFB626] hover:text-black transition disabled:opacity-60"
-            >
-              {saving ? "Ajout…" : "Ajouter"}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 border border-black py-3 rounded-xl hover:bg-black hover:text-white transition"
-            >
-              Annuler
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-function ProfilContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const userId = searchParams.get("user");
-
-  const [authUser, setAuthUser] = useState<AuthUser | null>(() => {
-    if (typeof window === "undefined") return null;
-    try {
-      return JSON.parse(localStorage.getItem("user") ?? "null");
-    } catch {
-      return null;
-    }
-  });
-  const [loading, setLoading] = useState(!userId);
-  const [error, setError] = useState("");
-  const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState<{ name: string; bio: string }>(() => {
-    if (typeof window === "undefined") return { name: "", bio: "" };
-    try {
-      const u = JSON.parse(localStorage.getItem("user") ?? "null");
-      return { name: u?.name ?? "", bio: u?.bio ?? "" };
-    } catch {
-      return { name: "", bio: "" };
-    }
-  });
-  const [saving, setSaving] = useState(false);
-  const [showAddSkill, setShowAddSkill] = useState(false);
-  const [showAddAvailability, setShowAddAvailability] = useState(false);
-
-  useEffect(() => {
-    if (userId) return;
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
-    fetch("/api/v1/users/me", { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => {
-        if (r.status === 401) {
-          localStorage.removeItem("token");
-          router.push("/login");
-          return null;
-        }
-        return r.json();
-      })
-      .then((data) => {
-        if (!data) return;
-        setAuthUser(data);
-        setForm({ name: data.name ?? "", bio: data.bio ?? "" });
-      })
-      .catch(() => setError("Impossible de charger le profil."))
-      .finally(() => setLoading(false));
-  }, [router, userId]);
-
-  async function handleSave(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    const token = localStorage.getItem("token");
-    const res = await fetch("/api/v1/users/me", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(form),
-    });
-    const data = await res.json();
-    setSaving(false);
-    if (res.ok) {
-      setAuthUser((prev) => ({ ...prev, ...data }));
-      localStorage.setItem("user", JSON.stringify({ ...authUser, ...data }));
-      setEditMode(false);
-    } else {
-      setError(data.message ?? "Erreur lors de la sauvegarde.");
-    }
-  }
-
-  function handleSkillAdded(skill: UserSkillItem) {
-    setAuthUser((prev) => ({
-      ...prev,
-      skills: [...(prev?.skills ?? []), skill],
-    }));
-  }
-
-  function handleAvailabilityAdded(availability: AvailabilityItem) {
-    setAuthUser((prev) => ({
-      ...prev,
-      availabilities: [...(prev?.availabilities ?? []), availability],
-    }));
-  }
-
-  // Vue profil d'un autre utilisateur
-  if (userId) return <PublicProfilView userId={userId} />;
-
-  if (loading)
-    return (
-      <main className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-        <p className="text-gray-600">Chargement…</p>
-      </main>
-    );
-
-  const initials = authUser?.name?.charAt(0)?.toUpperCase() ?? "?";
-
-  return (
-    <main className="min-h-screen bg-white text-black">
-      <Header />
-
-      {showAddSkill && (
-        <AddSkillModal
-          onClose={() => setShowAddSkill(false)}
-          onAdded={handleSkillAdded}
-        />
-      )}
-      {showAddAvailability && (
-        <AddAvailabilityModal
-          onClose={() => setShowAddAvailability(false)}
-          onAdded={handleAvailabilityAdded}
-        />
-      )}
-
-      <section className="max-w-7xl mx-auto px-5 py-10">
-        <Link href="/" className="text-sm hover:text-[#DFB626]">
-          ← Accueil
-        </Link>
-
-        {error && (
-          <p className="mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2">
-            {error}
-          </p>
-        )}
-
-        <div className="grid lg:grid-cols-[320px_1fr] gap-10 mt-8">
-          <aside className="border border-gray-200 rounded-3xl p-6 h-fit">
-            <div className="w-32 h-32 bg-[#DFB626] rounded-full flex items-center justify-center text-5xl font-bold mx-auto">
-              {initials}
-            </div>
-            <h1 className="text-2xl font-bold text-center mt-5">
-              {authUser?.name}
-            </h1>
-            <p className="text-center text-gray-500 text-sm">
-              {authUser?.email}
-            </p>
-
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <div className="bg-[#F5F5F5] rounded-2xl p-4 text-center">
-                <p className="text-xl font-bold">
-                  {authUser?.skills?.length ?? 0}
-                </p>
-                <p className="text-sm">Compétences</p>
-              </div>
-              <div className="bg-[#F5F5F5] rounded-2xl p-4 text-center">
-                <p className="text-xl font-bold">
-                  {authUser?.availabilities?.length ?? 0}
-                </p>
-                <p className="text-sm">Dispos</p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setEditMode(true)}
-              className="w-full bg-black text-white py-4 rounded-xl mt-6 hover:bg-[#DFB626] hover:text-black transition"
-            >
-              Modifier le profil
-            </button>
-            <button
-              onClick={() => {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                router.push("/");
-              }}
-              className="w-full border border-black py-4 rounded-xl mt-3 hover:bg-black hover:text-white transition"
-            >
-              Déconnexion
-            </button>
-          </aside>
-
-          <section className="space-y-8">
-            <div className="border border-gray-200 rounded-3xl p-8">
-              <p className="text-[#DFB626] font-bold mb-2">Mon profil</p>
-
-              {editMode ? (
-                <form onSubmit={handleSave} className="space-y-4 mt-2">
-                  <input
-                    type="text"
-                    value={form.name}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, name: e.target.value }))
-                    }
-                    required
-                    placeholder="Nom complet"
-                    className="w-full border rounded-xl px-4 py-3"
-                  />
-                  <textarea
-                    value={form.bio}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, bio: e.target.value }))
-                    }
-                    placeholder="Courte description (bio)"
-                    rows={3}
-                    className="w-full border rounded-xl px-4 py-3 resize-none"
-                  />
-                  <div className="flex gap-3">
-                    <button
-                      type="submit"
-                      disabled={saving}
-                      className="bg-black text-white px-6 py-3 rounded-xl hover:bg-[#DFB626] hover:text-black transition disabled:opacity-60"
-                    >
-                      {saving ? "Sauvegarde…" : "Enregistrer"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setEditMode(false)}
-                      className="border border-black px-6 py-3 rounded-xl hover:bg-black hover:text-white transition"
-                    >
-                      Annuler
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <>
-                  <h2 className="text-4xl font-serif font-bold">
-                    {authUser?.name}
-                  </h2>
-                  <p className="text-gray-600 mt-2">{authUser?.email}</p>
-                  {authUser?.bio && (
-                    <p className="text-gray-700 mt-4 leading-relaxed">
-                      {authUser.bio}
-                    </p>
-                  )}
-                </>
-              )}
-            </div>
-
-            <div className="border border-gray-200 rounded-3xl p-8">
-              <h3 className="font-bold text-xl mb-4">Mes compétences</h3>
-              {(authUser?.skills?.length ?? 0) > 0 ? (
-                <div className="space-y-3">
-                  {authUser!.skills!.map((s) => (
-                    <div
-                      key={s.id}
-                      className="flex justify-between items-center bg-[#F5F5F5] rounded-2xl px-4 py-3"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span>{s.skill?.name ?? s.name}</span>
-                        <span
-                          className={`text-xs px-3 py-1 rounded-full ${s.type === "TEACH" ? "bg-[#DFB626] text-black" : "bg-black text-white"}`}
-                        >
-                          {s.type === "TEACH" ? "J'enseigne" : "J'apprends"}
-                        </span>
-                      </div>
-                      <span className="text-sm text-gray-600">
-                        {LEVELS[s.level] ?? s.level}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500 text-center py-6">
-                  Aucune compétence ajoutée pour l&apos;instant.
-                </p>
-              )}
-              <button
-                onClick={() => setShowAddSkill(true)}
-                className="mt-5 w-full border-2 border-dashed border-gray-200 text-gray-600 py-4 rounded-xl hover:border-[#DFB626] hover:text-black transition"
-              >
-                + Ajouter une compétence
-              </button>
-            </div>
-
-            <div className="border border-gray-200 rounded-3xl p-8">
-              <h3 className="font-bold text-xl mb-4">Mes disponibilités</h3>
-              {(authUser?.availabilities?.length ?? 0) > 0 ? (
-                <div className="flex flex-wrap gap-3">
-                  {authUser!.availabilities!.map((a) => (
-                    <span
-                      key={a.id}
-                      className="bg-[#DFB626] text-black px-4 py-2 rounded-full text-sm"
-                    >
-                      {a.dayOfWeek !== undefined ? DAYS[a.dayOfWeek] : a.day}{" "}
-                      {a.startTime}–{a.endTime}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500 text-center py-6">
-                  Aucune disponibilité renseignée.
-                </p>
-              )}
-              <button
-                onClick={() => setShowAddAvailability(true)}
-                className="mt-5 w-full border-2 border-dashed border-gray-200 text-gray-600 py-4 rounded-xl hover:border-[#DFB626] hover:text-black transition"
-              >
-                + Ajouter une disponibilité
-              </button>
-            </div>
-          </section>
-        </div>
-      </section>
-
-      <Footer />
-    </main>
-  );
+function makeInitials(name: string) {
+  return name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
 export default function ProfilPage() {
+  const searchParams = useSearchParams();
+  const selected = searchParams.get("user") || "tom";
+
+  const [profiles, setProfiles] = useState<Profile[]>(initialProfiles);
+  const [editMode, setEditMode] = useState(false);
+  const [newSkill, setNewSkill] = useState("");
+  const [newAvailability, setNewAvailability] = useState({
+    day: "",
+    hour: "",
+    available: true,
+  });
+
+  const [newProfile, setNewProfile] = useState({
+    name: "",
+    role: "",
+    bio: "",
+    skills: "",
+  });
+
+  const profile = profiles.find((p) => p.slug === selected) || profiles[0];
+
+  const updateProfile = (field: keyof Profile, value: string) => {
+    setProfiles((current) =>
+      current.map((item) =>
+        item.slug === profile.slug ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  const addSkill = () => {
+    if (!newSkill.trim()) return;
+
+    setProfiles((current) =>
+      current.map((item) =>
+        item.slug === profile.slug
+          ? { ...item, skills: [...item.skills, newSkill.trim()] }
+          : item
+      )
+    );
+
+    setNewSkill("");
+  };
+
+  const removeSkill = (skill: string) => {
+    setProfiles((current) =>
+      current.map((item) =>
+        item.slug === profile.slug
+          ? { ...item, skills: item.skills.filter((s) => s !== skill) }
+          : item
+      )
+    );
+  };
+
+  const addAvailability = () => {
+    if (!newAvailability.day.trim() || !newAvailability.hour.trim()) return;
+
+    setProfiles((current) =>
+      current.map((item) =>
+        item.slug === profile.slug
+          ? {
+              ...item,
+              availability: [...item.availability, newAvailability],
+            }
+          : item
+      )
+    );
+
+    setNewAvailability({
+      day: "",
+      hour: "",
+      available: true,
+    });
+  };
+
+  const createProfile = () => {
+    if (!newProfile.name.trim() || !newProfile.role.trim()) return;
+
+    const profileToAdd: Profile = {
+      slug: makeSlug(newProfile.name),
+      initials: makeInitials(newProfile.name),
+      name: newProfile.name,
+      role: newProfile.role,
+      score: 75,
+      rating: 4,
+      sessions: 0,
+      xp: 0,
+      color: "bg-[#1800AD]",
+      presence: "offline",
+      lastSeen: "Nouveau profil",
+      skills: newProfile.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean),
+      bio: newProfile.bio || "Nouveau profil étudiant SkillSwap.",
+      availability: [],
+    };
+
+    setProfiles((current) => [...current, profileToAdd]);
+
+    setNewProfile({
+      name: "",
+      role: "",
+      bio: "",
+      skills: "",
+    });
+  };
+
   return (
-    <Suspense
-      fallback={
-        <main className="min-h-screen bg-[#F5F5F5] flex items-center justify-center">
-          <p className="text-gray-600">Chargement…</p>
-        </main>
-      }
-    >
-      <ProfilContent />
-    </Suspense>
+    <main className="relative min-h-screen bg-[#F6F7FB] text-[#4A4A4A] overflow-hidden">
+      <AnimatedBackground />
+
+      <div className="relative z-10">
+        <Header />
+
+        <section className="max-w-7xl mx-auto px-5 py-10">
+          <div className="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+            <div>
+              <p className="text-[#1800AD] font-bold">Profils étudiants</p>
+
+              <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
+                Gérer les profils et compétences
+              </h1>
+
+              <p className="mt-3">
+                Consulte, modifie ou ajoute un profil étudiant avec ses
+                compétences et disponibilités.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setEditMode(!editMode)}
+              className="bg-[#1800AD] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+            >
+              {editMode ? "Quitter modification" : "Modifier le profil"}
+            </button>
+          </div>
+
+          <div className="grid lg:grid-cols-[360px_1fr] gap-10">
+            <aside className="space-y-4">
+              {profiles.map((item) => {
+                const active = item.slug === profile.slug;
+
+                return (
+                  <Link
+                    key={item.slug}
+                    href={`/profil?user=${item.slug}`}
+                    className={`block bg-white border rounded-3xl p-5 transition ${
+                      active
+                        ? "border-[#1800AD] shadow-md"
+                        : "border-gray-100 hover:border-[#1800AD]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <div
+                          className={`w-14 h-14 rounded-full ${item.color} text-white flex items-center justify-center font-bold`}
+                        >
+                          {item.initials}
+                        </div>
+
+                        <span
+                          className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${presenceColor(
+                            item.presence
+                          )}`}
+                        />
+                      </div>
+
+                      <div className="flex-1">
+                        <h2 className="font-bold text-[#1800AD]">
+                          {item.name}
+                        </h2>
+                        <p className="text-sm">{item.role}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {item.lastSeen}
+                        </p>
+                      </div>
+
+                      <span className="text-sm font-bold text-green-700">
+                        {item.score}%
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+
+              <div className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
+                <h2 className="font-bold text-[#1800AD] mb-4">
+                  Ajouter un profil
+                </h2>
+
+                <div className="space-y-3">
+                  <input
+                    value={newProfile.name}
+                    onChange={(e) =>
+                      setNewProfile({ ...newProfile, name: e.target.value })
+                    }
+                    placeholder="Nom complet"
+                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                  />
+
+                  <input
+                    value={newProfile.role}
+                    onChange={(e) =>
+                      setNewProfile({ ...newProfile, role: e.target.value })
+                    }
+                    placeholder="Spécialité / rôle"
+                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                  />
+
+                  <input
+                    value={newProfile.skills}
+                    onChange={(e) =>
+                      setNewProfile({ ...newProfile, skills: e.target.value })
+                    }
+                    placeholder="Compétences séparées par virgule"
+                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                  />
+
+                  <textarea
+                    value={newProfile.bio}
+                    onChange={(e) =>
+                      setNewProfile({ ...newProfile, bio: e.target.value })
+                    }
+                    placeholder="Bio courte"
+                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none resize-none focus:border-[#1800AD]"
+                  />
+
+                  <button
+                    onClick={createProfile}
+                    className="w-full bg-[#1800AD] text-white py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+                  >
+                    Ajouter le profil
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            <section className="bg-white border border-gray-100 rounded-3xl p-6 md:p-8 shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+                <div className="flex items-center gap-5">
+                  <div className="relative">
+                    <div
+                      className={`w-24 h-24 rounded-full ${profile.color} text-white flex items-center justify-center text-3xl font-bold`}
+                    >
+                      {profile.initials}
+                    </div>
+
+                    <span
+                      className={`absolute bottom-1 right-1 w-5 h-5 rounded-full border-2 border-white ${presenceColor(
+                        profile.presence
+                      )}`}
+                    />
+                  </div>
+
+                  <div>
+                    {editMode ? (
+                      <div className="space-y-3">
+                        <input
+                          value={profile.name}
+                          onChange={(e) => updateProfile("name", e.target.value)}
+                          className="border border-[#E8E9F5] rounded-xl px-4 py-2 outline-none focus:border-[#1800AD]"
+                        />
+
+                        <input
+                          value={profile.role}
+                          onChange={(e) => updateProfile("role", e.target.value)}
+                          className="border border-[#E8E9F5] rounded-xl px-4 py-2 outline-none focus:border-[#1800AD]"
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <h2 className="text-2xl md:text-3xl font-bold text-[#1800AD]">
+                          {profile.name}
+                        </h2>
+                        <p>{profile.role}</p>
+                      </>
+                    )}
+
+                    <p className="text-sm text-gray-500 mt-1">
+                      {profile.lastSeen}
+                    </p>
+                    <p className="text-[#1800AD] mt-2">
+                      {stars(profile.rating)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <div className="bg-[#1800AD] text-white rounded-2xl p-4">
+                    <p className="font-bold">{profile.score}%</p>
+                    <p className="text-xs">Match</p>
+                  </div>
+
+                  <div className="border border-gray-100 rounded-2xl p-4">
+                    <p className="font-bold text-[#1800AD]">
+                      {profile.sessions}
+                    </p>
+                    <p className="text-xs">Sessions</p>
+                  </div>
+
+                  <div className="bg-[#1800AD]/10 rounded-2xl p-4">
+                    <p className="font-bold text-[#1800AD]">{profile.xp}</p>
+                    <p className="text-xs">XP</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8">
+                <h3 className="font-bold text-xl mb-2 text-[#1800AD]">Bio</h3>
+
+                {editMode ? (
+                  <textarea
+                    value={profile.bio}
+                    onChange={(e) => updateProfile("bio", e.target.value)}
+                    className="w-full border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none resize-none focus:border-[#1800AD]"
+                  />
+                ) : (
+                  <p>{profile.bio}</p>
+                )}
+              </div>
+
+              <div className="mt-8">
+                <h3 className="font-bold text-xl mb-3 text-[#1800AD]">
+                  Compétences
+                </h3>
+
+                <div className="flex flex-wrap gap-3">
+                  {profile.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="bg-[#1800AD]/10 text-[#1800AD] px-4 py-2 rounded-full font-medium flex items-center gap-2"
+                    >
+                      {skill}
+
+                      {editMode && (
+                        <button
+                          onClick={() => removeSkill(skill)}
+                          className="text-red-600 font-bold"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </span>
+                  ))}
+                </div>
+
+                {editMode && (
+                  <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                    <input
+                      value={newSkill}
+                      onChange={(e) => setNewSkill(e.target.value)}
+                      placeholder="Nouvelle compétence"
+                      className="flex-1 border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                    />
+
+                    <button
+                      onClick={addSkill}
+                      className="bg-[#1800AD] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+                    >
+                      Ajouter
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-8">
+                <h3 className="font-bold text-xl mb-3 text-[#1800AD]">
+                  Disponibilités
+                </h3>
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {profile.availability.map((slot) => (
+                    <div
+                      key={`${slot.day}-${slot.hour}`}
+                      className={`rounded-2xl p-4 border ${
+                        slot.available
+                          ? "border-green-500 bg-green-50"
+                          : "border-gray-100 bg-[#F6F7FB]"
+                      }`}
+                    >
+                      <p className="font-bold text-[#1800AD]">{slot.day}</p>
+                      <p>{slot.hour}</p>
+
+                      <p
+                        className={`text-sm mt-2 ${
+                          slot.available ? "text-green-700" : "text-gray-500"
+                        }`}
+                      >
+                        {slot.available ? "Disponible" : "Occupé"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {editMode && (
+                  <div className="grid md:grid-cols-4 gap-3 mt-4">
+                    <input
+                      value={newAvailability.day}
+                      onChange={(e) =>
+                        setNewAvailability({
+                          ...newAvailability,
+                          day: e.target.value,
+                        })
+                      }
+                      placeholder="Jour"
+                      className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                    />
+
+                    <input
+                      value={newAvailability.hour}
+                      onChange={(e) =>
+                        setNewAvailability({
+                          ...newAvailability,
+                          hour: e.target.value,
+                        })
+                      }
+                      placeholder="Horaire"
+                      className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                    />
+
+                    <select
+                      value={newAvailability.available ? "true" : "false"}
+                      onChange={(e) =>
+                        setNewAvailability({
+                          ...newAvailability,
+                          available: e.target.value === "true",
+                        })
+                      }
+                      className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                    >
+                      <option value="true">Disponible</option>
+                      <option value="false">Occupé</option>
+                    </select>
+
+                    <button
+                      onClick={addAvailability}
+                      className="bg-[#1800AD] text-white rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+                    >
+                      Ajouter
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 mt-10">
+                <Link
+                  href="/sessions"
+                  className="bg-[#1800AD] text-white text-center px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+                >
+                  Planifier une session
+                </Link>
+
+                <Link
+                  href="/feed"
+                  className="border border-[#1800AD] text-[#1800AD] text-center px-6 py-3 rounded-xl font-semibold hover:bg-[#1800AD] hover:text-white transition"
+                >
+                  Voir les feedbacks
+                </Link>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <Footer />
+      </div>
+    </main>
   );
 }

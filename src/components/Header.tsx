@@ -38,7 +38,7 @@ export default function Header() {
   };
 
   const privateLinks = [
-    { href: "/", label: "Accueil" },
+    { href: "/profil", label: "Accueil" },
     { href: "/matchs", label: "Matching" },
     { href: "/sessions", label: "Sessions" },
     { href: "/gamification", label: "Gamification" },
