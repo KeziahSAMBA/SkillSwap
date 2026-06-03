@@ -67,7 +67,6 @@ export default function MatchsPage() {
 
         <div className="bg-[#F5F5F5] rounded-3xl p-5 mb-8">
           <div className="bg-white rounded-2xl px-5 py-4 flex items-center gap-3">
-            <span>🔍</span>
             <input
               placeholder="Rechercher une compétence..."
               className="flex-1 outline-none bg-transparent"

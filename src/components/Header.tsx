@@ -37,6 +37,7 @@ export default function Header() {
     { href: "/sessions", label: "Sessions" },
     { href: "/gamification", label: "Gamification" },
     { href: "/feed", label: "Feed social" },
+    { href: "/messages", label: "Messages" },
   ];
 
   return (

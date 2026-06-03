@@ -2,11 +2,35 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AnimatedBackground from "@/components/AnimatedBackground";
 
-const profiles = [
+type Availability = {
+  day: string;
+  hour: string;
+  available: boolean;
+};
+
+type Profile = {
+  slug: string;
+  initials: string;
+  name: string;
+  role: string;
+  score: number;
+  rating: number;
+  sessions: number;
+  xp: number;
+  color: string;
+  presence: string;
+  lastSeen: string;
+  skills: string[];
+  bio: string;
+  availability: Availability[];
+};
+
+const initialProfiles: Profile[] = [
   {
     slug: "tom",
     initials: "TC",
@@ -31,7 +55,7 @@ const profiles = [
     slug: "sarah",
     initials: "SA",
     name: "Sarah Benali",
-    role: "E-business",
+    role: "Marketing digital",
     score: 89,
     rating: 4,
     sessions: 11,
@@ -50,7 +74,7 @@ const profiles = [
     slug: "estelle",
     initials: "ES",
     name: "Estelle Morel",
-    role: "Chef de projet",
+    role: "Gestion de projet",
     score: 83,
     rating: 4,
     sessions: 8,
@@ -59,7 +83,7 @@ const profiles = [
     presence: "offline",
     lastSeen: "Hors ligne depuis 2h",
     skills: ["Agile", "Scrum", "Trello"],
-    bio: "J’accompagne les étudiants sur la gestion Agile, Scrum et Trello.",
+    bio: "J’accompagne les étudiants sur la gestion Agile, Scrum et l’organisation de projets.",
     availability: [
       { day: "Lundi", hour: "10h - 11h", available: true },
       { day: "Vendredi", hour: "15h - 16h", available: true },
@@ -77,14 +101,15 @@ const profiles = [
     color: "bg-[#4D3AFF]",
     presence: "online",
     lastSeen: "En ligne maintenant",
-    skills: ["Figma", "Prototype", "UX"],
-    bio: "Designer UX/UI, j’aide à créer des maquettes modernes et simples à utiliser.",
+    skills: ["Figma", "Prototype", "UX Design"],
+    bio: "Designer UX/UI, j’aide les étudiants à créer des maquettes modernes, claires et utilisables.",
     availability: [
       { day: "Mercredi", hour: "13h - 14h", available: true },
       { day: "Jeudi", hour: "18h - 19h", available: true },
     ],
   },
 ];
+
 
 function stars(rating: number) {
   return "★".repeat(rating) + "☆".repeat(5 - rating);
@@ -99,7 +124,61 @@ function presenceColor(presence: string) {
 export default function ProfilPage() {
   const searchParams = useSearchParams();
   const selected = searchParams.get("user") || "tom";
+
+  const [profiles, setProfiles] = useState<Profile[]>(initialProfiles);
+  const [newSkill, setNewSkill] = useState("");
+  const [newAvailability, setNewAvailability] = useState({
+    day: "",
+    hour: "",
+    available: true,
+  });
+
   const profile = profiles.find((p) => p.slug === selected) || profiles[0];
+
+  const addSkill = () => {
+    if (!newSkill.trim()) return;
+
+    setProfiles((current) =>
+      current.map((item) =>
+        item.slug === profile.slug
+          ? { ...item, skills: [...item.skills, newSkill.trim()] }
+          : item
+      )
+    );
+
+    setNewSkill("");
+  };
+
+  const removeSkill = (skill: string) => {
+    setProfiles((current) =>
+      current.map((item) =>
+        item.slug === profile.slug
+          ? { ...item, skills: item.skills.filter((s) => s !== skill) }
+          : item
+      )
+    );
+  };
+
+  const addAvailability = () => {
+    if (!newAvailability.day.trim() || !newAvailability.hour.trim()) return;
+
+    setProfiles((current) =>
+      current.map((item) =>
+        item.slug === profile.slug
+          ? {
+              ...item,
+              availability: [...item.availability, newAvailability],
+            }
+          : item
+      )
+    );
+
+    setNewAvailability({
+      day: "",
+      hour: "",
+      available: true,
+    });
+  };
 
   return (
     <main className="relative min-h-screen bg-[#F6F7FB] text-[#4A4A4A] overflow-hidden">
@@ -236,11 +315,34 @@ export default function ProfilPage() {
                   {profile.skills.map((skill) => (
                     <span
                       key={skill}
-                      className="bg-[#1800AD]/10 text-[#1800AD] px-4 py-2 rounded-full font-medium"
+                      className="bg-[#1800AD]/10 text-[#1800AD] px-4 py-2 rounded-full font-medium flex items-center gap-2"
                     >
                       {skill}
+
+                      <button
+                        onClick={() => removeSkill(skill)}
+                        className="text-red-600 font-bold"
+                      >
+                        ×
+                      </button>
                     </span>
                   ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                  <input
+                    value={newSkill}
+                    onChange={(e) => setNewSkill(e.target.value)}
+                    placeholder="Nouvelle compétence"
+                    className="flex-1 border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                  />
+
+                  <button
+                    onClick={addSkill}
+                    className="bg-[#1800AD] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+                  >
+                    Ajouter
+                  </button>
                 </div>
               </div>
 
@@ -269,19 +371,55 @@ export default function ProfilPage() {
                       >
                         {slot.available ? "Disponible" : "Occupé"}
                       </p>
-
-                      <button
-                        disabled={!slot.available}
-                        className={`w-full mt-4 py-2 rounded-xl font-semibold transition ${
-                          slot.available
-                            ? "bg-[#1800AD] text-white hover:bg-[#4D3AFF]"
-                            : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                        }`}
-                      >
-                        {slot.available ? "Réserver" : "Indisponible"}
-                      </button>
                     </div>
                   ))}
+                </div>
+
+                <div className="grid md:grid-cols-4 gap-3 mt-4">
+                  <input
+                    value={newAvailability.day}
+                    onChange={(e) =>
+                      setNewAvailability({
+                        ...newAvailability,
+                        day: e.target.value,
+                      })
+                    }
+                    placeholder="Jour"
+                    className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                  />
+
+                  <input
+                    value={newAvailability.hour}
+                    onChange={(e) =>
+                      setNewAvailability({
+                        ...newAvailability,
+                        hour: e.target.value,
+                      })
+                    }
+                    placeholder="Horaire"
+                    className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                  />
+
+                  <select
+                    value={newAvailability.available ? "true" : "false"}
+                    onChange={(e) =>
+                      setNewAvailability({
+                        ...newAvailability,
+                        available: e.target.value === "true",
+                      })
+                    }
+                    className="border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
+                  >
+                    <option value="true">Disponible</option>
+                    <option value="false">Occupé</option>
+                  </select>
+
+                  <button
+                    onClick={addAvailability}
+                    className="bg-[#1800AD] text-white rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
+                  >
+                    Ajouter
+                  </button>
                 </div>
               </div>
 
