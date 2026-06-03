@@ -9,7 +9,9 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-4 mb-5">
               <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#1800AD] font-black text-2xl">
-                SW
+               <Link href="/" className="flex items-center gap-3">
+                <img src="/logo-6you.jpeg" alt="SkillSwap" className="h-10 w-auto" />
+              </Link>
               </div>
 
               <div>
@@ -25,19 +27,6 @@ export default function Footer() {
               Grandir ensemble.
             </p>
 
-            <div className="flex gap-4 mt-6 text-3xl">
-              <span className="cursor-pointer hover:scale-110 transition">
-                📷
-              </span>
-
-              <span className="cursor-pointer hover:scale-110 transition">
-                💼
-              </span>
-
-              <span className="cursor-pointer hover:scale-110 transition">
-                🎮
-              </span>
-            </div>
           </div>
 
           {/* Produit */}

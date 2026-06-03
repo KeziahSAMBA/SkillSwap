@@ -32,11 +32,12 @@ export default function Header() {
 
   const links = [
     { href: "/", label: "Accueil" },
-    { href: "/matchs", label: "Matching" },
+    { href: "/match", label: "Matching" },
     { href: "/profil", label: "Profil" },
     { href: "/sessions", label: "Sessions" },
     { href: "/gamification", label: "Gamification" },
     { href: "/feed", label: "Feed social" },
+    { href: "/messages", label: "Messages" },
   ];
 
   return (

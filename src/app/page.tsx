@@ -297,7 +297,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
             {skills.map((skill) => (
               <Link
-                href="/matchs"
+                href="/"
                 key={skill.name}
                 className="bg-white border border-gray-200 rounded-full px-5 py-3 flex items-center justify-between hover:border-[#1800AD] transition"
               >
