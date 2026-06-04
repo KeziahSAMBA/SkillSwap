@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,199 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id                  String               @id @default(uuid())
+  email               String               @unique
+  name                String
+  password            String
+  photoUrl            String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  bio                 String?
+  justificatifUrl     String?
+  availabilities      Availability[]
+  challengesRecv      Challenge[]          @relation("challenged")
+  challengesSent      Challenge[]          @relation("challenger")
+  feedPosts           FeedPost[]
+  feedbacks           Feedback[]           @relation("giver")
+  feedbacksRecv       Feedback[]           @relation("receiver")
+  matchesAsHelper     Match[]              @relation("helper")
+  matchesAsSeeker     Match[]              @relation("seeker")
+  points              Point[]
+  recommendationsRecv Recommendation[]     @relation("recommended")
+  recommendations     Recommendation[]     @relation("recommender")
+  sessionsParts       SessionParticipant[]
+  badges              UserBadge[]
+  skills              UserSkill[]
+}
+
+model Skill {
+  id         String      @id @default(uuid())
+  name       String      @unique
+  category   String?
+  matches    Match[]
+  sessions   Session[]
+  userSkills UserSkill[]
+}
+
+model UserSkill {
+  id      String     @id @default(uuid())
+  userId  String
+  skillId String
+  level   SkillLevel
+  type    SkillType
+  skill   Skill      @relation(fields: [skillId], references: [id])
+  user    User       @relation(fields: [userId], references: [id])
+
+  @@unique([userId, skillId, type])
+}
+
+model Availability {
+  id        String @id @default(uuid())
+  userId    String
+  dayOfWeek Int
+  startTime String
+  endTime   String
+  user      User   @relation(fields: [userId], references: [id])
+}
+
+model Match {
+  id        String      @id @default(uuid())
+  seekerId  String
+  helperId  String
+  skillId   String
+  status    MatchStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  helper    User        @relation("helper", fields: [helperId], references: [id])
+  seeker    User        @relation("seeker", fields: [seekerId], references: [id])
+  skill     Skill       @relation(fields: [skillId], references: [id])
+}
+
+model Session {
+  id           String               @id @default(uuid())
+  title        String
+  type         SessionType
+  status       SessionStatus        @default(PLANNED)
+  scheduledAt  DateTime
+  skillId      String
+  createdAt    DateTime             @default(now())
+  feedbacks    Feedback[]
+  skill        Skill                @relation(fields: [skillId], references: [id])
+  participants SessionParticipant[]
+}
+
+model SessionParticipant {
+  id        String  @id @default(uuid())
+  sessionId String
+  userId    String
+  session   Session @relation(fields: [sessionId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+}
+
+model Point {
+  id          String   @id @default(uuid())
+  userId      String
+  amount      Int
+  description String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Badge {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  description String?
+  iconUrl     String?
+  users       UserBadge[]
+}
+
+model UserBadge {
+  id       String   @id @default(uuid())
+  userId   String
+  badgeId  String
+  earnedAt DateTime @default(now())
+  badge    Badge    @relation(fields: [badgeId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+}
+
+model Challenge {
+  id           String          @id @default(uuid())
+  challengerId String
+  challengedId String
+  description  String
+  status       ChallengeStatus @default(OPEN)
+  createdAt    DateTime        @default(now())
+  challenged   User            @relation("challenged", fields: [challengedId], references: [id])
+  challenger   User            @relation("challenger", fields: [challengerId], references: [id])
+}
+
+model FeedPost {
+  id        String   @id @default(uuid())
+  authorId  String
+  content   String
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+model Recommendation {
+  id            String   @id @default(uuid())
+  recommenderId String
+  recommendedId String
+  content       String
+  createdAt     DateTime @default(now())
+  recommended   User     @relation("recommended", fields: [recommendedId], references: [id])
+  recommender   User     @relation("recommender", fields: [recommenderId], references: [id])
+}
+
+model Feedback {
+  id         String   @id @default(uuid())
+  giverId    String
+  receiverId String
+  sessionId  String
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+  giver      User     @relation("giver", fields: [giverId], references: [id])
+  receiver   User     @relation("receiver", fields: [receiverId], references: [id])
+  session    Session  @relation(fields: [sessionId], references: [id])
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum SkillType {
+  TEACH
+  LEARN
+}
+
+enum MatchStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum SessionType {
+  WORKSHOP
+  QUICK_COURSE
+  CLUB
+}
+
+enum SessionStatus {
+  PLANNED
+  ONGOING
+  DONE
+  CANCELLED
+}
+
+enum ChallengeStatus {
+  OPEN
+  ACCEPTED
+  COMPLETED
+  DECLINED
 }
