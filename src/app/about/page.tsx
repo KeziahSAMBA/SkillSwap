@@ -1,44 +1,44 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const features = [
   {
-    icon: "👤",
-    title: "Profil étudiant",
-    text: "Déclare tes compétences, ton niveau et tes disponibilités pour te rendre visible auprès des autres étudiants.",
+    icon: "ðŸ‘¤",
+    title: "Profil Ã©tudiant",
+    text: "DÃ©clare tes compÃ©tences, ton niveau et tes disponibilitÃ©s pour te rendre visible auprÃ¨s des autres Ã©tudiants.",
   },
   {
-    icon: "🔍",
-    title: "Système de matching",
-    text: "Trouve un pair pour apprendre ou enseigner une compétence grâce à un algorithme de mise en relation.",
+    icon: "ðŸ”",
+    title: "SystÃ¨me de matching",
+    text: "Trouve un pair pour apprendre ou enseigner une compÃ©tence grÃ¢ce Ã  un algorithme de mise en relation.",
   },
   {
-    icon: "📅",
+    icon: "ðŸ“…",
     title: "Gestion des sessions",
-    text: "Planifie des ateliers, cours collectifs ou clubs thématiques directement sur la plateforme.",
+    text: "Planifie des ateliers, cours collectifs ou clubs thÃ©matiques directement sur la plateforme.",
   },
   {
-    icon: "🏆",
+    icon: "ðŸ†",
     title: "Gamification",
-    text: "Gagne des XP, débloque des badges et relève des défis pour valoriser tes contributions.",
+    text: "Gagne des XP, dÃ©bloque des badges et relÃ¨ve des dÃ©fis pour valoriser tes contributions.",
   },
   {
-    icon: "📰",
+    icon: "ðŸ“°",
     title: "Feed social",
-    text: "Partage tes réalisations, laisse des recommandations et donne des feedbacks à tes pairs.",
+    text: "Partage tes rÃ©alisations, laisse des recommandations et donne des feedbacks Ã  tes pairs.",
   },
   {
-    icon: "💬",
+    icon: "ðŸ’¬",
     title: "Messagerie interne",
-    text: "Échange directement avec tes matchs, partage des ressources et coordonne-toi facilement.",
+    text: "Ã‰change directement avec tes matchs, partage des ressources et coordonne-toi facilement.",
   },
 ];
 
 const team = [
   { initials: "SM", role: "Scrum Master / Lead technique", color: "bg-[#1800AD]" },
-  { initials: "FE", role: "Développeur front-end", color: "bg-[#4D3AFF]" },
-  { initials: "BE", role: "Développeur back-end", color: "bg-violet-600" },
+  { initials: "FE", role: "DÃ©veloppeur front-end", color: "bg-[#4D3AFF]" },
+  { initials: "BE", role: "DÃ©veloppeur back-end", color: "bg-violet-600" },
   { initials: "PO", role: "Product Owner / MOA", color: "bg-indigo-600" },
   { initials: "UX", role: "UX / Communication", color: "bg-purple-500" },
 ];
@@ -47,9 +47,9 @@ const stack = [
   ["Next.js 16", "Framework front & API"],
   ["TypeScript", "Typage fort"],
   ["Tailwind CSS", "Styling utilitaire"],
-  ["Prisma + PostgreSQL", "ORM & base de données"],
+  ["Prisma + PostgreSQL", "ORM & base de donnÃ©es"],
   ["JWT", "Authentification stateless"],
-  ["API REST /api/v1/", "Architecture découplée"],
+  ["API REST /api/v1/", "Architecture dÃ©couplÃ©e"],
 ];
 
 export default function AboutPage() {
@@ -70,19 +70,19 @@ export default function AboutPage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-7xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Hero */}
           <div className="mb-14">
             <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
-              À propos
+              Ã€ propos
             </span>
             <h1 className="text-4xl md:text-5xl font-black mt-4 text-[#a594ff]">
-              La plateforme qui connecte<br />les étudiants par leurs compétences
+              La plateforme qui connecte<br />les Ã©tudiants par leurs compÃ©tences
             </h1>
             <p className="text-white/70 mt-4 max-w-2xl text-lg">
-              SkillSwap permet aux étudiants d&apos;un même établissement de s&apos;échanger
-              des compétences, de s&apos;organiser en sessions d&apos;apprentissage entre pairs
-              et de valoriser leurs expertises au sein d&apos;un réseau de confiance.
+              SkillSwap permet aux Ã©tudiants d&apos;un mÃªme Ã©tablissement de s&apos;Ã©changer
+              des compÃ©tences, de s&apos;organiser en sessions d&apos;apprentissage entre pairs
+              et de valoriser leurs expertises au sein d&apos;un rÃ©seau de confiance.
             </p>
             <div className="flex gap-4 mt-8">
               <Link
@@ -95,13 +95,13 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Chiffres clés */}
+          {/* Chiffres clÃ©s */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-14">
             {[
-              ["5", "Fonctionnalités principales"],
-              ["12K+", "Matchs réalisés"],
+              ["5", "FonctionnalitÃ©s principales"],
+              ["12K+", "Matchs rÃ©alisÃ©s"],
               ["3.5K", "Sessions / mois"],
-              ["+2500", "Étudiants actifs"],
+              ["+2500", "Ã‰tudiants actifs"],
             ].map(([value, label]) => (
               <div
                 key={label}
@@ -113,7 +113,7 @@ export default function AboutPage() {
             ))}
           </div>
 
-          {/* Fonctionnalités */}
+          {/* FonctionnalitÃ©s */}
           <div className="mb-14">
             <h2 className="text-2xl md:text-3xl font-black text-[#a594ff] mb-8">
               Ce que propose SkillSwap
@@ -152,7 +152,7 @@ export default function AboutPage() {
             </div>
 
             <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6">
-              <h2 className="text-2xl font-black text-[#a594ff] mb-6">Équipe projet</h2>
+              <h2 className="text-2xl font-black text-[#a594ff] mb-6">Ã‰quipe projet</h2>
               <div className="space-y-4">
                 {team.map((member) => (
                   <div key={member.role} className="flex items-center gap-4">
@@ -166,24 +166,24 @@ export default function AboutPage() {
                 ))}
               </div>
               <p className="mt-6 text-white/40 text-xs">
-                Projet réalisé dans le cadre du Workshop Agile/Scrum — Institut F2i / École DSP
+                Projet rÃ©alisÃ© dans le cadre du Workshop Agile/Scrum â€” Institut F2i / Ã‰cole DSP
               </p>
             </div>
           </div>
 
           {/* Architecture */}
           <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6">
-            <h2 className="text-2xl font-black text-[#a594ff] mb-3">Architecture découplée</h2>
+            <h2 className="text-2xl font-black text-[#a594ff] mb-3">Architecture dÃ©couplÃ©e</h2>
             <p className="text-white/70 mb-6 max-w-2xl">
-              SkillSwap est conçu avec une architecture découplée dès l&apos;origine pour permettre
-              une évolution future vers une application mobile. Le front web et la future app
-              mobile consomment la même API REST.
+              SkillSwap est conÃ§u avec une architecture dÃ©couplÃ©e dÃ¨s l&apos;origine pour permettre
+              une Ã©volution future vers une application mobile. Le front web et la future app
+              mobile consomment la mÃªme API REST.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                ["🌐", "Front-end web", "Next.js responsive"],
-                ["⚡", "API REST /api/v1/", "Stateless · JWT · JSON"],
-                ["🗄️", "Base de données", "PostgreSQL · Prisma"],
+                ["ðŸŒ", "Front-end web", "Next.js responsive"],
+                ["âš¡", "API REST /api/v1/", "Stateless Â· JWT Â· JSON"],
+                ["ðŸ—„ï¸", "Base de donnÃ©es", "PostgreSQL Â· Prisma"],
               ].map(([icon, title, sub]) => (
                 <div
                   key={title}
@@ -203,3 +203,4 @@ export default function AboutPage() {
     </main>
   );
 }
+

@@ -33,7 +33,7 @@ export default function GamificationPage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-7xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Header */}
           <div className="mb-10">
             <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
@@ -49,7 +49,7 @@ export default function GamificationPage() {
           </div>
 
           {/* STATS */}
-          <div className="grid md:grid-cols-4 gap-6 mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
             {[
               ["680", "XP"],
               ["8", "Badges"],

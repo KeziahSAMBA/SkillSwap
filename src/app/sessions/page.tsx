@@ -188,7 +188,7 @@ export default function SessionsPage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-7xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Header */}
           <div className="mb-10">
             <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
@@ -213,7 +213,7 @@ export default function SessionsPage() {
 
           {/* Formulaire inline */}
           {showForm && (
-            <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-8 mb-8 w-fit">
+            <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6 md:p-8 mb-8 w-full max-w-lg">
               <form onSubmit={handleCreate}>
                 <div className="flex items-start justify-between mb-1">
                   <h2 className="text-2xl font-black text-[#a594ff]">Nouvelle session</h2>
@@ -229,7 +229,7 @@ export default function SessionsPage() {
                   Remplis les informations pour créer ton cours collectif
                 </p>
 
-                <div className="flex flex-col gap-4 max-w-sm">
+                <div className="flex flex-col gap-4 w-full">
                     {/* Titre */}
                     <div>
                       <label className="block text-white/70 text-xs font-medium mb-1.5">
@@ -385,7 +385,7 @@ export default function SessionsPage() {
 
           {/* Cartes */}
           {loading ? (
-            <div className="grid lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div
                   key={i}
@@ -400,7 +400,7 @@ export default function SessionsPage() {
               <p className="text-white/60 mt-2">Aucune session disponible pour ce filtre.</p>
             </div>
           ) : (
-            <div className="grid lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredSessions.map((session) => {
                 const max = MAX_PARTICIPANTS[session.type] ?? 10;
                 const count = session.participants.length;

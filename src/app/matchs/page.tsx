@@ -67,6 +67,7 @@ export default function MatchsPage() {
   const [loading, setLoading] = useState(true);
   const [pendingMatchs, setPendingMatchs] = useState<Set<string>>(new Set());
   const [hoveredMatch, setHoveredMatch] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
   const justClickedMatch = useRef<Set<string>>(new Set());
 
   // Debounce search
@@ -134,7 +135,7 @@ export default function MatchsPage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-7xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
             <div>
@@ -190,8 +191,15 @@ export default function MatchsPage() {
           <div className="grid lg:grid-cols-[260px_1fr] gap-8">
             {/* Filtres */}
             <aside className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6 h-fit">
-              <h2 className="text-2xl font-black mb-6 text-[#a594ff]">Filtres</h2>
-
+              <button
+                className="lg:hidden w-full flex items-center justify-between mb-2"
+                onClick={() => setShowFilters((v) => !v)}
+              >
+                <h2 className="text-2xl font-black text-[#a594ff]">Filtres</h2>
+                <span className="text-white/60 text-xl">{showFilters ? "▲" : "▼"}</span>
+              </button>
+              <h2 className="hidden lg:block text-2xl font-black mb-6 text-[#a594ff]">Filtres</h2>
+              <div className={`${showFilters ? "block" : "hidden"} lg:block`}>
               <p className="font-bold mb-3 text-white/80">Niveau</p>
               {LEVELS.map((level) => (
                 <label
@@ -230,6 +238,7 @@ export default function MatchsPage() {
               >
                 Réinitialiser
               </button>
+              </div>
             </aside>
 
             {/* Cartes */}

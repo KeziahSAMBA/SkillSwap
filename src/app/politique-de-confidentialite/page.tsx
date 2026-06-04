@@ -1,38 +1,38 @@
-import Header from "@/components/Header";
+﻿import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const articles = [
   {
     title: "1. Responsable du traitement",
-    text: "Le responsable du traitement des données est l'équipe SkillSwap, dans le cadre du projet pédagogique réalisé à l'Institut F2i / École DSP. Pour toute question, contactez : contact@skillswap.fr.",
+    text: "Le responsable du traitement des donnÃ©es est l'Ã©quipe SkillSwap, dans le cadre du projet pÃ©dagogique rÃ©alisÃ© Ã  l'Institut F2i / Ã‰cole DSP. Pour toute question, contactez : contact@skillswap.fr.",
   },
   {
-    title: "2. Données collectées",
-    text: "Nous collectons les données que vous nous fournissez lors de l'inscription (nom, email institutionnel), ainsi que les données générées par votre utilisation de la plateforme : compétences déclarées, disponibilités, sessions, badges, feedbacks et interactions sociales.",
+    title: "2. DonnÃ©es collectÃ©es",
+    text: "Nous collectons les donnÃ©es que vous nous fournissez lors de l'inscription (nom, email institutionnel), ainsi que les donnÃ©es gÃ©nÃ©rÃ©es par votre utilisation de la plateforme : compÃ©tences dÃ©clarÃ©es, disponibilitÃ©s, sessions, badges, feedbacks et interactions sociales.",
   },
   {
-    title: "3. Finalités du traitement",
-    text: "Vos données sont utilisées pour vous identifier sur la plateforme, permettre le matching avec d'autres étudiants, organiser des sessions, gérer la gamification et afficher le feed social. Aucune donnée n'est utilisée à des fins commerciales.",
+    title: "3. FinalitÃ©s du traitement",
+    text: "Vos donnÃ©es sont utilisÃ©es pour vous identifier sur la plateforme, permettre le matching avec d'autres Ã©tudiants, organiser des sessions, gÃ©rer la gamification et afficher le feed social. Aucune donnÃ©e n'est utilisÃ©e Ã  des fins commerciales.",
   },
   {
-    title: "4. Base légale",
-    text: "Le traitement est fondé sur votre consentement, donné lors de l'inscription, et sur l'intérêt légitime lié au fonctionnement de la plateforme éducative.",
+    title: "4. Base lÃ©gale",
+    text: "Le traitement est fondÃ© sur votre consentement, donnÃ© lors de l'inscription, et sur l'intÃ©rÃªt lÃ©gitime liÃ© au fonctionnement de la plateforme Ã©ducative.",
   },
   {
-    title: "5. Durée de conservation",
-    text: "Vos données sont conservées pendant la durée de vie de votre compte. À la suppression du compte, les données personnelles sont effacées dans un délai de 30 jours, sauf obligation légale contraire.",
+    title: "5. DurÃ©e de conservation",
+    text: "Vos donnÃ©es sont conservÃ©es pendant la durÃ©e de vie de votre compte. Ã€ la suppression du compte, les donnÃ©es personnelles sont effacÃ©es dans un dÃ©lai de 30 jours, sauf obligation lÃ©gale contraire.",
   },
   {
-    title: "6. Partage des données",
-    text: "Vos données ne sont pas vendues ni cédées à des tiers. Certaines informations de profil (nom, compétences, disponibilités) sont visibles des autres étudiants inscrits sur la plateforme dans le cadre du matching.",
+    title: "6. Partage des donnÃ©es",
+    text: "Vos donnÃ©es ne sont pas vendues ni cÃ©dÃ©es Ã  des tiers. Certaines informations de profil (nom, compÃ©tences, disponibilitÃ©s) sont visibles des autres Ã©tudiants inscrits sur la plateforme dans le cadre du matching.",
   },
   {
     title: "7. Cookies",
-    text: "SkillSwap utilise des cookies strictement nécessaires au fonctionnement du site (session, authentification). Les cookies optionnels nécessitent votre consentement préalable via le bandeau affiché à votre première visite.",
+    text: "SkillSwap utilise des cookies strictement nÃ©cessaires au fonctionnement du site (session, authentification). Les cookies optionnels nÃ©cessitent votre consentement prÃ©alable via le bandeau affichÃ© Ã  votre premiÃ¨re visite.",
   },
   {
     title: "8. Vos droits",
-    text: "Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition, de portabilité et de limitation du traitement de vos données. Pour exercer ces droits, rendez-vous sur la page RGPD ou écrivez à contact@skillswap.fr.",
+    text: "ConformÃ©ment au RGPD, vous disposez d'un droit d'accÃ¨s, de rectification, d'effacement, d'opposition, de portabilitÃ© et de limitation du traitement de vos donnÃ©es. Pour exercer ces droits, rendez-vous sur la page RGPD ou Ã©crivez Ã  contact@skillswap.fr.",
   },
 ];
 
@@ -54,18 +54,18 @@ export default function PolitiqueConfidentialitePage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-4xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-4xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Header */}
           <div className="mb-10">
             <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
-              Légal
+              LÃ©gal
             </span>
             <h1 className="text-4xl md:text-5xl font-black mt-4 text-[#a594ff]">
-              Politique de confidentialité
+              Politique de confidentialitÃ©
             </h1>
             <p className="text-white/70 mt-3 max-w-2xl">
-              Dernière mise à jour : juin 2026. Comment SkillSwap collecte, utilise
-              et protège vos données personnelles.
+              DerniÃ¨re mise Ã  jour : juin 2026. Comment SkillSwap collecte, utilise
+              et protÃ¨ge vos donnÃ©es personnelles.
             </p>
           </div>
 
@@ -83,7 +83,7 @@ export default function PolitiqueConfidentialitePage() {
             {/* Contact */}
             <div className="backdrop-blur-sm bg-[#4D3AFF]/30 border border-[#a594ff]/30 rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-[#a594ff]">Une question sur vos données ?</h2>
+                <h2 className="text-lg font-bold text-[#a594ff]">Une question sur vos donnÃ©es ?</h2>
                 <p className="text-white/60 text-sm mt-1">Contactez-nous ou consultez la page RGPD.</p>
               </div>
               <div className="flex gap-3 shrink-0">
@@ -109,3 +109,4 @@ export default function PolitiqueConfidentialitePage() {
     </main>
   );
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Header from "@/components/Header";
@@ -8,22 +8,22 @@ const faqs = [
   {
     question: "Qui peut contacter l'administration ?",
     answer:
-      "Tous les utilisateurs de SkillSwap peuvent contacter l'administration ou le support en cas de question, problème technique ou demande liée au compte.",
+      "Tous les utilisateurs de SkillSwap peuvent contacter l'administration ou le support en cas de question, problÃ¨me technique ou demande liÃ©e au compte.",
   },
   {
-    question: "Combien de temps pour obtenir une réponse ?",
+    question: "Combien de temps pour obtenir une rÃ©ponse ?",
     answer:
-      "Une réponse est généralement apportée dans les meilleurs délais par l'équipe support ou l'administration de l'établissement.",
+      "Une rÃ©ponse est gÃ©nÃ©ralement apportÃ©e dans les meilleurs dÃ©lais par l'Ã©quipe support ou l'administration de l'Ã©tablissement.",
   },
   {
     question: "Puis-je demander la suppression de mon compte ici ?",
     answer:
-      "Oui, vous pouvez utiliser ce formulaire pour faire une demande liée à vos données personnelles ou à votre compte.",
+      "Oui, vous pouvez utiliser ce formulaire pour faire une demande liÃ©e Ã  vos donnÃ©es personnelles ou Ã  votre compte.",
   },
   {
-    question: "Le formulaire est-il connecté au backend ?",
+    question: "Le formulaire est-il connectÃ© au backend ?",
     answer:
-      "Cette interface prévoit un envoi via API sur la route /api/v1/contact.",
+      "Cette interface prÃ©voit un envoi via API sur la route /api/v1/contact.",
   },
 ];
 
@@ -43,7 +43,7 @@ export default function ContactPage() {
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Email invalide.";
     if (!form.subject.trim()) e.subject = "L'objet est obligatoire.";
     if (!form.message.trim()) e.message = "Le message est obligatoire.";
-    else if (form.message.trim().length < 10) e.message = "Au moins 10 caractères.";
+    else if (form.message.trim().length < 10) e.message = "Au moins 10 caractÃ¨res.";
     setErrors(e);
     return !Object.values(e).some(Boolean);
   };
@@ -90,7 +90,7 @@ export default function ContactPage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-7xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Header */}
           <div className="mb-10">
             <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
@@ -100,8 +100,8 @@ export default function ContactPage() {
               Contacter l&apos;administration ou le support
             </h1>
             <p className="text-white/70 mt-3 max-w-2xl">
-              Utilisez ce formulaire pour signaler un problème technique, poser une
-              question ou faire une demande liée à votre compte SkillSwap.
+              Utilisez ce formulaire pour signaler un problÃ¨me technique, poser une
+              question ou faire une demande liÃ©e Ã  votre compte SkillSwap.
             </p>
           </div>
 
@@ -113,7 +113,7 @@ export default function ContactPage() {
             >
               {success && (
                 <div className="mb-6 bg-green-500/10 border border-green-400/30 text-green-300 rounded-2xl p-4 font-medium">
-                  Message envoyé. Le support reviendra vers vous dès que possible.
+                  Message envoyÃ©. Le support reviendra vers vous dÃ¨s que possible.
                 </div>
               )}
 
@@ -163,12 +163,12 @@ export default function ContactPage() {
                 <h2 className="text-xl font-bold text-[#a594ff]">Support SkillSwap</h2>
                 <p className="mt-3 text-white/70 text-sm">
                   Pour toute demande urgente, contactez directement
-                  l&apos;administration de votre établissement.
+                  l&apos;administration de votre Ã©tablissement.
                 </p>
                 <div className="mt-5 space-y-2 text-sm text-white/80">
-                  <p>📩 support@skillswap.fr</p>
-                  <p>🏫 Administration établissement</p>
-                  <p>⏱️ Réponse selon disponibilité</p>
+                  <p>ðŸ“© support@skillswap.fr</p>
+                  <p>ðŸ« Administration Ã©tablissement</p>
+                  <p>â±ï¸ RÃ©ponse selon disponibilitÃ©</p>
                 </div>
               </div>
 
@@ -199,3 +199,4 @@ export default function ContactPage() {
     </main>
   );
 }
+

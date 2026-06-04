@@ -7,9 +7,9 @@ export default function Footer() {
   return (
     <footer className="bg-[#ffffff] text-[#1800AD] border-t">
       <div className="max-w-7xl mx-auto px-5 py-12">
-        <div className="grid md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* LOGO */}
-          <div>
+          <div className="md:col-span-2">
             <div className="flex items-center gap-4 mb-5">
               <Link href="/">
                 <Image
@@ -64,7 +64,7 @@ export default function Footer() {
           </div>
 
           {/* INFORMATIONS */}
-          <div className="md:col-start-4">
+          <div className="md:col-start-4 md:col-span-1">
             <h4 className="font-bold text-lg mb-4 text-[#1800AD]">Informations</h4>
 
             <div className="space-y-3 text-[#4A4A4A]/70">

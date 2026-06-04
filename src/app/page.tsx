@@ -84,10 +84,10 @@ export default function Home() {
       <Header />
 
       {/* HERO */}
-      <section className="min-h-screen flex items-center relative pt-30 overflow-hidden">
+      <section className="min-h-screen flex items-center relative pt-32 md:pt-36 overflow-hidden">
         <SectionBg src="/students.jpg" position="top" />
-        <div className="relative z-10 max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="mt-10">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center w-full">
+          <div className="mt-6 md:mt-10">
             <span className="inline-block backdrop-blur-[1px] bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full mb-6">
               Plateforme étudiante collaborative
             </span>
@@ -133,8 +133,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative">
-            <div className="absolute -right-3 -top-4 z-10 bg-white rounded-2xl shadow-lg px-5 py-3 flex items-center gap-3">
+          <div className="relative mt-10 lg:mt-0 mb-8 lg:mb-0">
+            <div className="hidden sm:flex absolute -right-3 -top-4 z-10 bg-white rounded-2xl shadow-lg px-5 py-3 items-center gap-3">
               <span className="w-9 h-9 rounded-full bg-green-500 text-white flex items-center justify-center">
                 ✓
               </span>
@@ -170,7 +170,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="absolute -left-3 bottom-[-22px] z-10 bg-white shadow-lg rounded-2xl px-5 py-3 flex items-center gap-3">
+            <div className="hidden sm:flex absolute -left-3 bottom-[-22px] z-10 bg-white shadow-lg rounded-2xl px-5 py-3 items-center gap-3">
               <span className="w-9 h-9 rounded-full bg-[#4D3AFF] text-white flex items-center justify-center">
                 🎓
               </span>

@@ -1,47 +1,47 @@
-import Header from "@/components/Header";
+﻿import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const sections = [
   {
-    title: "1. Mentions légales",
-    text: "SkillSwap est une plateforme étudiante collaborative permettant aux utilisateurs de partager des compétences, consulter des profils, organiser des sessions et interagir dans un cadre pédagogique. Projet réalisé dans le cadre du Workshop Agile/Scrum — Institut F2i / École DSP.",
+    title: "1. Mentions lÃ©gales",
+    text: "SkillSwap est une plateforme Ã©tudiante collaborative permettant aux utilisateurs de partager des compÃ©tences, consulter des profils, organiser des sessions et interagir dans un cadre pÃ©dagogique. Projet rÃ©alisÃ© dans le cadre du Workshop Agile/Scrum â€” Institut F2i / Ã‰cole DSP.",
   },
   {
-    title: "2. Conditions générales d'utilisation",
-    text: "L'utilisateur s'engage à utiliser SkillSwap dans un cadre respectueux, légal et pédagogique. Il est interdit de publier des contenus offensants, frauduleux, discriminatoires ou contraires aux règles de l'établissement. La plateforme peut restreindre l'accès à un compte en cas d'usage abusif.",
+    title: "2. Conditions gÃ©nÃ©rales d'utilisation",
+    text: "L'utilisateur s'engage Ã  utiliser SkillSwap dans un cadre respectueux, lÃ©gal et pÃ©dagogique. Il est interdit de publier des contenus offensants, frauduleux, discriminatoires ou contraires aux rÃ¨gles de l'Ã©tablissement. La plateforme peut restreindre l'accÃ¨s Ã  un compte en cas d'usage abusif.",
   },
   {
-    title: "3. Politique de confidentialité",
-    text: "Les données collectées peuvent inclure le nom, l'adresse email, les compétences, les disponibilités, les sessions, les badges, les feedbacks et les interactions liées au fonctionnement de la plateforme. Ces données servent uniquement à permettre le matching, la gestion des profils, les sessions et l'amélioration du service.",
+    title: "3. Politique de confidentialitÃ©",
+    text: "Les donnÃ©es collectÃ©es peuvent inclure le nom, l'adresse email, les compÃ©tences, les disponibilitÃ©s, les sessions, les badges, les feedbacks et les interactions liÃ©es au fonctionnement de la plateforme. Ces donnÃ©es servent uniquement Ã  permettre le matching, la gestion des profils, les sessions et l'amÃ©lioration du service.",
   },
   {
     title: "4. Gestion des cookies",
-    text: "Les cookies strictement nécessaires permettent le fonctionnement du site. Les cookies optionnels, par exemple liés aux statistiques ou à l'amélioration de l'expérience, nécessitent le consentement préalable de l'utilisateur.",
+    text: "Les cookies strictement nÃ©cessaires permettent le fonctionnement du site. Les cookies optionnels, par exemple liÃ©s aux statistiques ou Ã  l'amÃ©lioration de l'expÃ©rience, nÃ©cessitent le consentement prÃ©alable de l'utilisateur.",
   },
   {
-    title: "5. Droit à l'oubli",
-    text: "L'utilisateur peut demander la suppression de son compte et des données personnelles associées. Certaines données peuvent être conservées temporairement lorsqu'une obligation légale ou technique l'exige.",
+    title: "5. Droit Ã  l'oubli",
+    text: "L'utilisateur peut demander la suppression de son compte et des donnÃ©es personnelles associÃ©es. Certaines donnÃ©es peuvent Ãªtre conservÃ©es temporairement lorsqu'une obligation lÃ©gale ou technique l'exige.",
   },
   {
-    title: "6. Export des données personnelles",
-    text: "L'utilisateur peut demander une copie de ses données personnelles dans un format exploitable. La demande peut concerner le profil, les compétences, les sessions, les badges, les publications et les feedbacks associés au compte.",
+    title: "6. Export des donnÃ©es personnelles",
+    text: "L'utilisateur peut demander une copie de ses donnÃ©es personnelles dans un format exploitable. La demande peut concerner le profil, les compÃ©tences, les sessions, les badges, les publications et les feedbacks associÃ©s au compte.",
   },
 ];
 
 const rights = [
-  "Droit d'accès aux données personnelles",
+  "Droit d'accÃ¨s aux donnÃ©es personnelles",
   "Droit de rectification des informations inexactes",
-  "Droit d'effacement des données",
+  "Droit d'effacement des donnÃ©es",
   "Droit d'opposition au traitement",
-  "Droit à la portabilité des données",
+  "Droit Ã  la portabilitÃ© des donnÃ©es",
   "Droit de limitation du traitement",
 ];
 
 const steps = [
-  ["Étape 1", "Envoyer une demande depuis l'adresse email associée au compte SkillSwap."],
-  ["Étape 2", "Indiquer le type de demande : export, suppression ou rectification."],
-  ["Étape 3", "L'équipe vérifie l'identité du demandeur avant traitement."],
-  ["Étape 4", "Une réponse est envoyée avec confirmation de l'action effectuée."],
+  ["Ã‰tape 1", "Envoyer une demande depuis l'adresse email associÃ©e au compte SkillSwap."],
+  ["Ã‰tape 2", "Indiquer le type de demande : export, suppression ou rectification."],
+  ["Ã‰tape 3", "L'Ã©quipe vÃ©rifie l'identitÃ© du demandeur avant traitement."],
+  ["Ã‰tape 4", "Une rÃ©ponse est envoyÃ©e avec confirmation de l'action effectuÃ©e."],
 ];
 
 export default function RGPDPage() {
@@ -62,18 +62,18 @@ export default function RGPDPage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-6xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-6xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Header */}
           <div className="mb-10">
             <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
-              Pages légales &amp; RGPD
+              Pages lÃ©gales &amp; RGPD
             </span>
             <h1 className="text-4xl md:text-5xl font-black mt-4 text-[#a594ff]">
-              Protection des données personnelles
+              Protection des donnÃ©es personnelles
             </h1>
             <p className="text-white/70 mt-3 max-w-2xl">
-              Informations légales, politique de confidentialité, gestion des cookies
-              et droits des utilisateurs sur leurs données personnelles.
+              Informations lÃ©gales, politique de confidentialitÃ©, gestion des cookies
+              et droits des utilisateurs sur leurs donnÃ©es personnelles.
             </p>
           </div>
 
@@ -90,10 +90,10 @@ export default function RGPDPage() {
                 </article>
               ))}
 
-              {/* Procédure */}
+              {/* ProcÃ©dure */}
               <article className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6">
                 <h2 className="text-lg font-bold text-[#a594ff] mb-5">
-                  Procédure de demande d&apos;export ou suppression
+                  ProcÃ©dure de demande d&apos;export ou suppression
                 </h2>
                 <div className="space-y-3">
                   {steps.map(([label, text]) => (
@@ -134,7 +134,7 @@ export default function RGPDPage() {
               <div className="backdrop-blur-sm bg-[#4D3AFF]/30 border border-[#a594ff]/30 rounded-3xl p-6">
                 <h2 className="text-lg font-bold text-[#a594ff]">Contact RGPD</h2>
                 <p className="mt-3 text-white/70 text-sm">
-                  Pour toute demande liée aux données personnelles :
+                  Pour toute demande liÃ©e aux donnÃ©es personnelles :
                 </p>
                 <a
                   href="mailto:contact@skillswap.fr"
@@ -152,3 +152,4 @@ export default function RGPDPage() {
     </main>
   );
 }
+

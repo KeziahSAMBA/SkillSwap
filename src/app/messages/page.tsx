@@ -83,6 +83,7 @@ function presenceDot(presence: string) {
 
 export default function MessagesPage() {
   const [activeConversationId, setActiveConversationId] = useState(1);
+  const [showChat, setShowChat] = useState(false);
   const [message, setMessage] = useState("");
 
   const activeConversation = useMemo(
@@ -115,7 +116,7 @@ export default function MessagesPage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-7xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Header */}
           <div className="mb-10">
             <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
@@ -133,7 +134,7 @@ export default function MessagesPage() {
           {/* Chat container */}
           <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl overflow-hidden grid lg:grid-cols-[320px_1fr] min-h-[620px]">
             {/* LISTE CONVERSATIONS */}
-            <aside className="border-r border-white/10">
+            <aside className={`border-r border-white/10 ${showChat ? "hidden lg:block" : "block"}`}>
               <div className="p-4 border-b border-white/10">
                 <input
                   placeholder="Rechercher..."
@@ -147,7 +148,7 @@ export default function MessagesPage() {
                   return (
                     <button
                       key={conv.id}
-                      onClick={() => setActiveConversationId(conv.id)}
+                      onClick={() => { setActiveConversationId(conv.id); setShowChat(true); }}
                       className={`w-full text-left p-4 transition ${
                         active ? "bg-[#4D3AFF]/30" : "hover:bg-white/10"
                       }`}
@@ -187,10 +188,16 @@ export default function MessagesPage() {
             </aside>
 
             {/* ZONE CHAT */}
-            <section className="flex flex-col min-h-[620px]">
+            <section className={`flex flex-col min-h-155 ${showChat ? "flex" : "hidden lg:flex"}`}>
               {/* Header chat */}
               <div className="p-5 border-b border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setShowChat(false)}
+                    className="lg:hidden text-white/60 hover:text-white transition mr-1 text-lg"
+                  >
+                    ←
+                  </button>
                   <div className="relative">
                     <div className="w-11 h-11 rounded-full bg-[#4D3AFF]/60 border border-white/20 text-white flex items-center justify-center font-bold text-sm">
                       {activeConversation.initials}

@@ -197,23 +197,21 @@ export default function Header() {
           )}
         </div>
 
-        {user && (
-          <button
-            onClick={() => setOpen(!open)}
-            className="lg:hidden text-2xl transition"
-            style={{ color: "#1800AD" }}
-          >
-            ☰
-          </button>
-        )}
+        <button
+          onClick={() => setOpen(!open)}
+          className="lg:hidden text-2xl transition"
+          style={{ color: "#1800AD" }}
+        >
+          ☰
+        </button>
       </div>
 
-      {open && user && (
+      {open && (
         <div
           className="lg:hidden px-5 pb-5 flex flex-col gap-4 border-t border-gray-100"
           style={{ background: "rgba(255, 255, 255, 0.97)", backdropFilter: "blur(12px)" }}
         >
-          {links.map((link) => (
+          {user && links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -246,7 +244,7 @@ export default function Header() {
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}
-                className="border border-[#1800AD] text-[#1800AD] px-4 py-2 rounded-xl text-center font-semibold"
+                className="border border-[#1800AD] text-[#1800AD] px-4 py-2 rounded-xl text-center font-semibold mt-3"
               >
                 Connexion
               </Link>

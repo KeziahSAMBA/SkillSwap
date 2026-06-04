@@ -46,7 +46,7 @@ export default function FeedPage() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-5xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-5xl mx-auto px-5 pt-32 md:pt-40 pb-16">
           {/* Header */}
           <div className="mb-10">
             <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "@/lib/prisma";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
 export async function POST(req: NextRequest) {
@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
   const uploadDir = path.join(process.cwd(), "public", "uploads", "justificatifs");
   const filePath = path.join(uploadDir, filename);
+  await mkdir(uploadDir, { recursive: true });
   const buffer = Buffer.from(await justificatif.arrayBuffer());
   await writeFile(filePath, buffer);
 

@@ -332,7 +332,7 @@ function ProfilContent() {
       <div className="relative z-10">
         <Header />
 
-        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+        <section className="max-w-7xl mx-auto px-5 pt-32 md:pt-40 pb-16">
 
           {/* Page header */}
           <div className="mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
