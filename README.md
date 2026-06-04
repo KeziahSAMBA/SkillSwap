@@ -10,12 +10,90 @@ Le site est conçu dès l'origine avec une **architecture découplée** pour per
 
 ## 📑 Sommaire
 
+- [Installation & lancement](#-installation--lancement)
 - [Périmètre fonctionnel](#-périmètre-fonctionnel)
 - [User stories](#-user-stories)
 - [Arborescence du site (front)](#-arborescence-du-site-front)
 - [Architecture back-end](#-architecture-back-end)
 - [Stack technique](#-stack-technique)
 - [Équipe projet](#-équipe-projet)
+
+---
+
+## 🚀 Installation & lancement
+
+### Prérequis
+
+- [Node.js 20+](https://nodejs.org/)
+- [Docker](https://www.docker.com/) et Docker Compose
+
+### Variables d'environnement
+
+Créez un fichier `.env` à la racine du projet :
+
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5434/skillswap?schema=public"
+JWT_SECRET="change-this-in-production"
+JWT_EXPIRES_IN="7d"
+```
+
+---
+
+### Option 1 — Développement local (Next.js)
+
+Cette méthode lance uniquement la base de données via Docker et le serveur Next.js en local.
+
+#### 1. Démarrer la base de données
+
+```bash
+docker compose up db -d
+```
+
+#### 2. Installer les dépendances
+
+```bash
+npm install
+```
+
+#### 3. Appliquer les migrations Prisma
+
+```bash
+npx prisma migrate deploy
+```
+
+#### 4. Lancer le serveur de développement
+
+```bash
+npx next dev
+```
+
+L'application est accessible sur [http://localhost:3000](http://localhost:3000).
+
+---
+
+### Option 2 — Déploiement complet via Docker
+
+Cette méthode build et lance l'intégralité de la stack (base de données, migrations, application) en une seule commande.
+
+```bash
+docker compose up --build
+```
+
+L'application est accessible sur [http://localhost:3000](http://localhost:3000).
+
+> **Note :** Le service `migrate` applique automatiquement les migrations Prisma avant le démarrage de l'application.
+
+Pour arrêter et supprimer les conteneurs :
+
+```bash
+docker compose down
+```
+
+Pour supprimer également les volumes (réinitialise la base de données) :
+
+```bash
+docker compose down -v
+```
 
 ---
 
