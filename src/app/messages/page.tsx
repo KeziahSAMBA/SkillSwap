@@ -13,7 +13,7 @@ const conversations = [
     presence: "online",
     lastSeen: "En ligne",
     unread: 2,
-    lastMessage: "Je t’ai envoyé l’exercice React.",
+    lastMessage: "Je t'ai envoyé l'exercice React.",
     messages: [
       {
         from: "other",
@@ -27,7 +27,7 @@ const conversations = [
       },
       {
         from: "other",
-        text: "Parfait, je t’ai envoyé l’exercice React.",
+        text: "Parfait, je t'ai envoyé l'exercice React.",
         time: "10:16",
         document: "exercice-react.pdf",
       },
@@ -45,13 +45,13 @@ const conversations = [
     messages: [
       {
         from: "other",
-        text: "J’ai préparé une fiche SEO simple.",
+        text: "J'ai préparé une fiche SEO simple.",
         time: "09:20",
         document: "fiche-seo.docx",
       },
       {
         from: "me",
-        text: "Merci, je regarde ça aujourd’hui.",
+        text: "Merci, je regarde ça aujourd'hui.",
         time: "09:25",
       },
     ],
@@ -75,22 +75,22 @@ const conversations = [
   },
 ];
 
-function presenceColor(presence: string) {
+function presenceDot(presence: string) {
   if (presence === "online") return "bg-green-500";
   if (presence === "away") return "bg-yellow-400";
-  return "bg-gray-400";
+  return "bg-white/30";
 }
 
 export default function MessagesPage() {
   const [activeConversationId, setActiveConversationId] = useState(1);
   const [message, setMessage] = useState("");
 
-  const activeConversation = useMemo(() => {
-    return (
-      conversations.find((conversation) => conversation.id === activeConversationId) ||
-      conversations[0]
-    );
-  }, [activeConversationId]);
+  const activeConversation = useMemo(
+    () =>
+      conversations.find((c) => c.id === activeConversationId) ||
+      conversations[0],
+    [activeConversationId]
+  );
 
   const sendMessage = () => {
     if (!message.trim()) return;
@@ -99,190 +99,180 @@ export default function MessagesPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F6F7FB] text-[#4A4A4A] pt-30">
-      <Header />
+    <main className="relative min-h-screen text-white overflow-hidden">
+      {/* Background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url('/students2.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
 
-      <section className="max-w-7xl mx-auto px-5 py-10">
-        <p className="text-[#1800AD] font-bold">Messagerie interne</p>
+      <div className="relative z-10">
+        <Header />
 
-        <h1 className="text-3xl md:text-4xl font-bold text-[#1800AD] mt-2">
-          Échanger avec tes matchs
-        </h1>
+        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+          {/* Header */}
+          <div className="mb-10">
+            <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
+              Messagerie interne
+            </span>
+            <h1 className="text-4xl md:text-5xl font-black mt-4 text-[#a594ff]">
+              Échanger avec tes matchs
+            </h1>
+            <p className="text-white/70 mt-3 max-w-2xl">
+              Discute avec les étudiants matchés, partage des cours ou exercices
+              et suis les nouveaux messages.
+            </p>
+          </div>
 
-        <p className="mt-3 max-w-3xl">
-          Discute avec les étudiants matchés, partage des cours ou exercices et
-          suis les nouveaux messages.
-        </p>
-
-        <div className="mt-10 bg-white border border-gray-100 rounded-3xl shadow-sm overflow-hidden grid lg:grid-cols-[360px_1fr] min-h-[650px]">
-          {/* LISTE CONVERSATIONS */}
-          <aside className="border-r border-gray-100 bg-white">
-            <div className="p-5 border-b border-gray-100">
-              <input
-                placeholder="Rechercher une conversation..."
-                className="w-full bg-[#F6F7FB] border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
-              />
-            </div>
-
-            <div className="divide-y divide-gray-100">
-              {conversations.map((conversation) => {
-                const active = conversation.id === activeConversationId;
-
-                return (
-                  <button
-                    key={conversation.id}
-                    onClick={() => setActiveConversationId(conversation.id)}
-                    className={`w-full text-left p-5 transition ${
-                      active ? "bg-[#1800AD]/10" : "hover:bg-[#F6F7FB]"
-                    }`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-[#1800AD] text-white flex items-center justify-center font-bold">
-                          {conversation.initials}
-                        </div>
-
-                        <span
-                          className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${presenceColor(
-                            conversation.presence
-                          )}`}
-                        />
-                      </div>
-
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between gap-3">
-                          <h2 className="font-bold text-[#1800AD]">
-                            {conversation.name}
-                          </h2>
-
-                          {conversation.unread > 0 && (
-                            <span className="bg-[#4D3AFF] text-white text-xs w-6 h-6 rounded-full flex items-center justify-center">
-                              {conversation.unread}
-                            </span>
-                          )}
-                        </div>
-
-                        <p className="text-sm text-gray-500">
-                          {conversation.skill}
-                        </p>
-
-                        <p className="text-sm mt-1 line-clamp-1">
-                          {conversation.lastMessage}
-                        </p>
-
-                        <p className="text-xs text-gray-400 mt-1">
-                          {conversation.lastSeen}
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </aside>
-
-          {/* ZONE CHAT */}
-          <section className="flex flex-col min-h-[650px]">
-            {/* HEADER CHAT */}
-            <div className="p-5 border-b border-gray-100 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-full bg-[#1800AD] text-white flex items-center justify-center font-bold">
-                    {activeConversation.initials}
-                  </div>
-
-                  <span
-                    className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${presenceColor(
-                      activeConversation.presence
-                    )}`}
-                  />
-                </div>
-
-                <div>
-                  <h2 className="font-bold text-[#1800AD]">
-                    {activeConversation.name}
-                  </h2>
-                  <p className="text-sm">{activeConversation.lastSeen}</p>
-                </div>
+          {/* Chat container */}
+          <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl overflow-hidden grid lg:grid-cols-[320px_1fr] min-h-[620px]">
+            {/* LISTE CONVERSATIONS */}
+            <aside className="border-r border-white/10">
+              <div className="p-4 border-b border-white/10">
+                <input
+                  placeholder="Rechercher..."
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 outline-none focus:border-[#a594ff]/60 transition"
+                />
               </div>
 
-              <span className="hidden sm:inline-block bg-[#F6F7FB] text-[#1800AD] px-4 py-2 rounded-full text-sm font-semibold">
-                Match : {activeConversation.skill}
-              </span>
-            </div>
-
-            {/* MESSAGES */}
-            <div className="flex-1 p-5 space-y-5 overflow-y-auto bg-[#F6F7FB]">
-              {activeConversation.messages.map((item, index) => {
-                const isMe = item.from === "me";
-
-                return (
-                  <div
-                    key={`${item.time}-${index}`}
-                    className={`flex ${isMe ? "justify-end" : "justify-start"}`}
-                  >
-                    <div
-                      className={`max-w-[85%] md:max-w-[65%] rounded-3xl px-5 py-4 ${
-                        isMe
-                          ? "bg-[#1800AD] text-white"
-                          : "bg-white text-[#4A4A4A] border border-gray-100"
+              <div className="divide-y divide-white/10">
+                {conversations.map((conv) => {
+                  const active = conv.id === activeConversationId;
+                  return (
+                    <button
+                      key={conv.id}
+                      onClick={() => setActiveConversationId(conv.id)}
+                      className={`w-full text-left p-4 transition ${
+                        active ? "bg-[#4D3AFF]/30" : "hover:bg-white/10"
                       }`}
                     >
-                      <p>{item.text}</p>
-
-                      {item.document && (
-                        <div
-                          className={`mt-3 rounded-2xl p-3 text-sm font-semibold ${
-                            isMe
-                              ? "bg-white/15 text-white"
-                              : "bg-[#F6F7FB] text-[#1800AD]"
-                          }`}
-                        >
-                          📎 {item.document}
+                      <div className="flex items-start gap-3">
+                        <div className="relative shrink-0">
+                          <div className="w-11 h-11 rounded-full bg-[#4D3AFF]/60 border border-white/20 text-white flex items-center justify-center font-bold text-sm">
+                            {conv.initials}
+                          </div>
+                          <span
+                            className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white/20 ${presenceDot(conv.presence)}`}
+                          />
                         </div>
-                      )}
 
-                      <p
-                        className={`text-xs mt-2 ${
-                          isMe ? "text-white/70" : "text-gray-400"
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <h2 className="font-bold text-white text-sm truncate">
+                              {conv.name}
+                            </h2>
+                            {conv.unread > 0 && (
+                              <span className="bg-[#4D3AFF] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center shrink-0">
+                                {conv.unread}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-[#a594ff] mt-0.5">{conv.skill}</p>
+                          <p className="text-xs text-white/50 mt-1 truncate">
+                            {conv.lastMessage}
+                          </p>
+                          <p className="text-xs text-white/30 mt-0.5">{conv.lastSeen}</p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </aside>
+
+            {/* ZONE CHAT */}
+            <section className="flex flex-col min-h-[620px]">
+              {/* Header chat */}
+              <div className="p-5 border-b border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="w-11 h-11 rounded-full bg-[#4D3AFF]/60 border border-white/20 text-white flex items-center justify-center font-bold text-sm">
+                      {activeConversation.initials}
+                    </div>
+                    <span
+                      className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white/20 ${presenceDot(activeConversation.presence)}`}
+                    />
+                  </div>
+                  <div>
+                    <h2 className="font-bold text-white">
+                      {activeConversation.name}
+                    </h2>
+                    <p className="text-xs text-white/50">
+                      {activeConversation.lastSeen}
+                    </p>
+                  </div>
+                </div>
+
+                <span className="hidden sm:inline-block backdrop-blur-xs bg-[#4D3AFF]/30 border border-[#a594ff]/40 text-[#a594ff] px-4 py-1.5 rounded-full text-sm font-semibold">
+                  Match : {activeConversation.skill}
+                </span>
+              </div>
+
+              {/* Messages */}
+              <div className="flex-1 p-5 space-y-4 overflow-y-auto bg-white/5">
+                {activeConversation.messages.map((item, index) => {
+                  const isMe = item.from === "me";
+                  return (
+                    <div
+                      key={`${item.time}-${index}`}
+                      className={`flex ${isMe ? "justify-end" : "justify-start"}`}
+                    >
+                      <div
+                        className={`max-w-[80%] md:max-w-[60%] rounded-3xl px-5 py-4 ${
+                          isMe
+                            ? "bg-[#4D3AFF]/70 border border-[#a594ff]/30 text-white"
+                            : "backdrop-blur-xs bg-white/15 border border-white/20 text-white"
                         }`}
                       >
-                        {item.time}
-                      </p>
+                        <p>{item.text}</p>
+                        {"document" in item && item.document && (
+                          <div className="mt-3 rounded-2xl p-3 text-sm font-semibold bg-white/10 border border-white/20 text-white/80">
+                            📎 {item.document}
+                          </div>
+                        )}
+                        <p className="text-xs mt-2 text-white/40">{item.time}</p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* FORMULAIRE MESSAGE */}
-            <div className="p-5 border-t border-gray-100 bg-white">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <label className="border border-[#1800AD] text-[#1800AD] px-4 py-3 rounded-xl font-semibold text-center cursor-pointer hover:bg-[#1800AD] hover:text-white transition">
-                  📎 Document
-                  <input type="file" className="hidden" />
-                </label>
-
-                <input
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Écrire un message..."
-                  className="flex-1 border border-[#E8E9F5] rounded-xl px-4 py-3 outline-none focus:border-[#1800AD]"
-                />
-
-                <button
-                  onClick={sendMessage}
-                  className="bg-[#1800AD] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#4D3AFF] transition"
-                >
-                  Envoyer
-                </button>
+                  );
+                })}
               </div>
-            </div>
-          </section>
-        </div>
-      </section>
 
-      <Footer />
+              {/* Formulaire message */}
+              <div className="p-4 border-t border-white/10">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <label className="backdrop-blur-xs bg-white/10 border border-white/20 text-white/70 px-4 py-3 rounded-xl font-semibold text-center cursor-pointer hover:bg-white/15 hover:text-white transition text-sm">
+                    📎 Document
+                    <input type="file" className="hidden" />
+                  </label>
+
+                  <input
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                    placeholder="Écrire un message..."
+                    className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 outline-none focus:border-[#a594ff]/60 transition"
+                  />
+
+                  <button
+                    onClick={sendMessage}
+                    className="backdrop-blur-xs bg-[#4D3AFF]/50 border border-[#a594ff]/40 text-white font-semibold px-6 py-3 rounded-xl hover:bg-[#4D3AFF]/70 transition"
+                  >
+                    Envoyer
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <Footer />
+      </div>
     </main>
   );
 }

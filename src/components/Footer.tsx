@@ -68,7 +68,7 @@ export default function Footer() {
             <h4 className="font-bold text-lg mb-4 text-[#1800AD]">Informations</h4>
 
             <div className="space-y-3 text-[#4A4A4A]/70">
-              <Link href="/a-propos" className="block hover:text-[#1800AD]">
+              <Link href="/about" className="block hover:text-[#1800AD]">
                 À propos
               </Link>
 
@@ -80,7 +80,7 @@ export default function Footer() {
                 RGPD
               </Link>
 
-              <Link href="/rgpd" className="block hover:text-[#1800AD]">
+              <Link href="/politique-de-confidentialite" className="block hover:text-[#1800AD]">
                 Politique de confidentialité
               </Link>
             </div>
@@ -93,18 +93,11 @@ export default function Footer() {
             © 2026 SkillSwap — Tous droits réservés.
           </p>
 
-          <div className="flex gap-6 text-sm text-[#4A4A4A]/60">
-            <Link href="/rgpd" className="hover:text-[#1800AD]">
-              Confidentialité
-            </Link>
-
-            <Link href="/contact" className="hover:text-[#1800AD]">
-              Contact
-            </Link>
-
-            <Link href="/a-propos" className="hover:text-[#1800AD]">
-              À propos
-            </Link>
+          <div className="flex items-start gap-2 text-sm text-[#4A4A4A]/60">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0 mt-0.5 text-yellow-500" viewBox="0 0 24 24" fill="currentColor">
+              <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
+            </svg>
+            Ceci est un projet fictif réalisé dans le cadre d’une formation. Toute ressemblance avec des entreprises réelles serait purement fortuite.
           </div>
         </div>
       </div>

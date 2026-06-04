@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -9,109 +10,117 @@ const badges = [
 ];
 
 const challenges = [
-  "Aider 3 étudiants cette semaine",
-  "Créer un atelier",
-  "Recevoir 5 feedbacks",
+  { label: "Aider 3 étudiants cette semaine", href: "/matchs" },
+  { label: "Créer un atelier", href: "/sessions" },
+  { label: "Recevoir 5 feedbacks", href: "/feed" },
 ];
 
 export default function GamificationPage() {
   return (
-    <main className="min-h-screen bg-[#F6F7FB] text-[#4A4A4A] pt-30">
-      <Header />
+    <main className="relative min-h-screen text-white overflow-hidden">
+      {/* Background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url('/students3.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
 
-      <section className="max-w-7xl mx-auto px-5 py-12">
-        <p className="text-[#1800AD] font-bold">Gamification</p>
+      <div className="relative z-10">
+        <Header />
 
-        <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
-          Progresse et sois valorisé
-        </h1>
+        <section className="max-w-7xl mx-auto px-5 pt-40 pb-16">
+          {/* Header */}
+          <div className="mb-10">
+            <span className="inline-block backdrop-blur-xs bg-white/10 border border-white/20 text-white font-bold px-4 py-2 text-sm rounded-full">
+              Gamification
+            </span>
+            <h1 className="text-4xl md:text-5xl font-black mt-4 text-[#a594ff]">
+              Progresse et sois valorisé
+            </h1>
+            <p className="text-white/70 mt-3 max-w-2xl">
+              Gagne des points, débloque des badges et relève des défis pour
+              développer ton profil.
+            </p>
+          </div>
 
-        <p className="mt-3">
-          Points, badges, défis et niveau de progression.
-        </p>
+          {/* STATS */}
+          <div className="grid md:grid-cols-4 gap-6 mb-10">
+            {[
+              ["680", "XP"],
+              ["8", "Badges"],
+              ["4", "Niveau"],
+              ["12", "Défis"],
+            ].map(([value, label]) => (
+              <div
+                key={label}
+                className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6 text-center"
+              >
+                <p className="text-3xl font-bold text-[#a594ff]">{value}</p>
+                <p className="mt-2 text-white/70">{label}</p>
+              </div>
+            ))}
+          </div>
 
-        <h1 className="text-3xl md:text-4xl font-bold mt-2 text-[#1800AD]">
-          Progresse et sois valorisé
-        </h1>
-
-        <p className="mt-3">
-          Gagne des points, débloque des badges et relève des défis pour
-          développer ton profil.
-        </p>
-
-        {/* STATS */}
-        <div className="grid md:grid-cols-4 gap-6 mt-10">
-          {[
-            ["680", "XP"],
-            ["8", "Badges"],
-            ["4", "Niveau"],
-            ["12", "Défis"],
-          ].map(([value, label]) => (
-            <div
-              key={label}
-              className="bg-white border border-gray-100 rounded-3xl p-6 text-center shadow-sm"
-            >
-              <p className="text-3xl font-bold text-[#1800AD]">{value}</p>
-              <p className="mt-2">{label}</p>
+          {/* BADGES + DEFIS */}
+          <div className="grid lg:grid-cols-2 gap-8 mb-10">
+            <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6">
+              <h2 className="text-2xl font-black mb-5 text-[#a594ff]">
+                Badges débloqués
+              </h2>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {badges.map((badge) => (
+                  <div
+                    key={badge}
+                    className="backdrop-blur-xs bg-white/10 border border-white/20 rounded-2xl p-5 font-bold hover:bg-white/15 hover:border-[#a594ff]/50 transition"
+                  >
+                    {badge}
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
 
-        {/* BADGES + DEFIS */}
-        <div className="grid lg:grid-cols-2 gap-8 mt-10">
-          <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-            <h2 className="text-2xl font-bold mb-5 text-[#1800AD]">
-              Badges débloqués
+            <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6">
+              <h2 className="text-2xl font-black mb-5 text-[#a594ff]">
+                Défis actifs
+              </h2>
+              <div className="space-y-4">
+                {challenges.map((challenge) => (
+                  <div
+                    key={challenge.label}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4"
+                  >
+                    <span className="text-white/80">{challenge.label}</span>
+                    <Link
+                      href={challenge.href}
+                      className="backdrop-blur-xs bg-[#4D3AFF]/50 border border-[#a594ff]/40 text-white font-semibold px-5 py-2 rounded-xl hover:bg-[#4D3AFF]/70 transition text-center shrink-0"
+                    >
+                      Relever
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* PROGRESSION */}
+          <div className="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl p-6">
+            <h2 className="text-2xl font-black mb-4 text-[#a594ff]">
+              Progression
             </h2>
-
-            <div className="grid sm:grid-cols-2 gap-4">
-              {badges.map((badge) => (
-                <div
-                  key={badge}
-                  className="bg-[#F6F7FB] border border-[#E8E9F5] rounded-2xl p-5 font-bold hover:border-[#1800AD] transition"
-                >
-                  {badge}
-                </div>
-              ))}
+            <div className="bg-white/15 rounded-full h-3 overflow-hidden">
+              <div className="bg-[#a594ff] h-3 rounded-full w-[70%] transition-all" />
             </div>
+            <p className="mt-3 text-white/60 text-sm">70% vers le niveau suivant</p>
           </div>
+        </section>
 
-          <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-            <h2 className="text-2xl font-bold mb-5 text-[#1800AD]">
-              Défis actifs
-            </h2>
-
-            <div className="space-y-4">
-              {challenges.map((challenge) => (
-                <div
-                  key={challenge}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4"
-                >
-                  <span>{challenge}</span>
-
-                  <button className="bg-[#1800AD] text-white px-4 py-2 rounded-xl font-semibold hover:bg-[#4D3AFF] transition">
-                    Relever
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-10 bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4 text-[#1800AD]">
-            Progression
-          </h2>
-
-          <div className="bg-[#E8E9F5] rounded-full h-5 overflow-hidden">
-            <div className="bg-[#1800AD] h-5 rounded-full w-[70%]" />
-          </div>
-
-          <p className="mt-3">70% vers le niveau suivant</p>
-        </div>
-      </section>
-
-      <Footer />
+        <Footer />
+      </div>
     </main>
   );
 }

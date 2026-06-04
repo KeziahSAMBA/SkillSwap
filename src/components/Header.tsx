@@ -59,7 +59,7 @@ export default function Header() {
     { href: "/sessions", label: "Sessions" },
     { href: "/gamification", label: "Gamification" },
     { href: "/feed", label: "Feed social" },
-    { href: "/message", label: "Messages" },
+    { href: "/messages", label: "Messages" },
   ];
 
   return (
@@ -113,14 +113,23 @@ export default function Header() {
 
         <div className="hidden md:flex items-center gap-3">
           {user && (
-            <Link
-              href="/feed"
-              className="relative text-xl hover:opacity-70 transition"
-              style={{ color: "#1800AD" }}
-            >
-              🔔
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#4D3AFF] rounded-full" />
-            </Link>
+            <>
+              <Link
+                href="/feed"
+                className="relative text-xl hover:opacity-70 transition"
+                style={{ color: "#1800AD" }}
+              >
+                🔔
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#4D3AFF] rounded-full" />
+              </Link>
+              <Link
+                href="/messages"
+                className="relative text-xl hover:opacity-70 transition"
+                style={{ color: "#1800AD" }}
+              >
+                📬
+              </Link>
+            </>
           )}
 
           {user ? (
